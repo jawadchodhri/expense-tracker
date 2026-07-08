@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getSession } from "../lib/storage";
+import Navbar from "@/app/components/Navbar";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -17,9 +18,9 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        Dashboard
-      </h1>
+      <Navbar />
+      <h1 className="text-4xl font-bold">Dashboard</h1>
+      <p className="text-gray-600">Welcome to your expense tracker.</p>
     </main>
   );
 }
