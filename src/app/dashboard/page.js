@@ -17,10 +17,14 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-screen flex flex-col">
       <Navbar />
-      <h1 className="text-4xl font-bold">Dashboard</h1>
-      <p className="text-gray-600">Welcome to your expense tracker.</p>
+      <div className="flex items-center justify-center flex-1">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">Dashboard</h1>
+          <p className="text-gray-600">Welcome to your expense tracker.</p>
+        </div>
+      </div>
     </main>
   );
 }
