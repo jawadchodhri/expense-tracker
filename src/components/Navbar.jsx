@@ -13,10 +13,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full bg-white shadow px-6 py-4 flex justify-between items-center">
-      <h1 className="font-bold text-xl text-gray-700">Expense Tracker</h1>
+    <nav className="w-full bg-sky-300 shadow px-6 py-4 flex justify-between items-center">
+      <h1 className="font-bold text-xl">Expense Tracker</h1>
 
-      <div className="flex gap-4 text-gray-400 items-center">
+      <div className="flex gap-4 items-center">
         <Link href="/dashboard">Dashboard</Link>
         <Link href="/income">Income</Link>
         <Link href="/expenses">Expenses</Link>
