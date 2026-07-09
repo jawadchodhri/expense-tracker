@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getUsers, saveSession } from "../lib/storage";
+import { getUsers, saveSession } from "@/lib/storage";
 
 export default function LoginPage() {
   const router = useRouter();
