@@ -37,3 +37,31 @@ export function groupByCategory(items) {
     total,
   }));
 } 
+
+export function groupByMonth(items) {
+  if (!Array.isArray(items)) return [];
+
+  const monthMap = {};
+
+  items.forEach((item) => {
+    if (!item.date) return;
+
+    const date = new Date(item.date);
+    if (Number.isNaN(date.getTime())) return;
+
+    const month = date.toLocaleString("default", {
+      month: "short",
+      year: "numeric",
+    });
+
+    const amount = Number(item.amount);
+    if (!Number.isFinite(amount)) return;
+
+    monthMap[month] = (monthMap[month] || 0) + amount;
+  });
+
+  return Object.entries(monthMap).map(([month, total]) => ({
+    month,
+    total,
+  }));
+}
