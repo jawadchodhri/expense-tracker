@@ -31,6 +31,12 @@ const registerFields = [
     minLength: 6,
     required: true,
   },
+  // {
+  //   name: "PhoneNumer",
+  //   type: "Number",
+  //   placeholder: "PhoneNumber",
+  //   required: false,
+  // }
 ];
 
 export default function RegisterPage() {

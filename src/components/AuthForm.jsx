@@ -35,11 +35,17 @@ export default function AuthForm({
 
         <div className="mt-5">
           {fields.map(function (field) {
-            return <InputField key={field.name} {...field} />;
+            return <InputField
+              key={field.name}
+              name={field.name}
+              type={field.type}
+              placeholder={field.placeholder}
+              value={field.value}
+              onChange={field.onChange} />;
           })}
         </div>
 
-        {children}
+        {/* {children} */}
 
         <button
           type="submit"

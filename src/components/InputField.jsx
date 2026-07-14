@@ -1,25 +1,19 @@
 export default function InputField({
   name,
-  label,
-  className = "",
-  ...inputProps
+  type,
+  placeholder,
+  value,
+  onChange,
 }) {
   return (
     <div className="mb-3">
-      {/* {label && (
-        <label
-          htmlFor={name}
-          className="mb-1 block text-sm font-medium text-gray-700"
-        >
-          {label}
-        </label>
-      )} */}
-
-      <input
+      <input className="w-full rounded-lg border p-3 text-gray-700"
         id={name}
         name={name}
-        {...inputProps}
-        className={`w-full rounded-lg border p-3 text-gray-700 ${className}`}
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
