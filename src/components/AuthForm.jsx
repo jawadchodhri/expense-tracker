@@ -45,7 +45,7 @@ export default function AuthForm({
           })}
         </div>
 
-        {/* {children} */}
+        {children}
 
         <button
           type="submit"
