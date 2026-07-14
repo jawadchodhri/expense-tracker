@@ -2,32 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
-import {
-  getUsers,
-  saveUsers,
-  saveSession,
-} from "@/lib/storage";
+import { getUsers, saveUsers, saveSession } from "@/lib/storage";
 
 const registerFields = [
   {
     name: "name",
     type: "text",
     placeholder: "Full name",
-    autoComplete: "name",
     required: true,
   },
   {
     name: "email",
     type: "email",
     placeholder: "Email",
-    autoComplete: "email",
     required: true,
   },
   {
     name: "password",
     type: "password",
     placeholder: "Create a password",
-    autoComplete: "new-password",
     minLength: 6,
     required: true,
   },
@@ -35,7 +28,6 @@ const registerFields = [
     name: "confirmPassword",
     type: "password",
     placeholder: "Confirm your password",
-    autoComplete: "new-password",
     minLength: 6,
     required: true,
   },
