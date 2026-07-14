@@ -9,14 +9,12 @@ const loginFields = [
     name: "email",
     type: "email",
     placeholder: "Email",
-    autoComplete: "email",
     required: true,
   },
   {
     name: "password",
     type: "password",
     placeholder: "Password",
-    autoComplete: "current-password",
     required: true,
   },
 ];

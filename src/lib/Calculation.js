@@ -1,53 +1,103 @@
 export function calculateTotal(items) {
-  if (!Array.isArray(items)) return 0;
+  if (!Array.isArray(items)) {
+    return 0;
+  }
 
-  return items.reduce((total, item) => {
+  let total = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
     const amount = Number(item.amount);
-    return total + (Number.isFinite(amount) ? amount : 0);
-  }, 0);
+
+    if (Number.isFinite(amount)) {
+      total = total + amount;
+    }
+  }
+
+  return total;
 }
 
 export function calculateBalance(income, expenses) {
   const totalIncome = calculateTotal(income);
   const totalExpenses = calculateTotal(expenses);
 
-  return totalIncome - totalExpenses;
+  const balance = totalIncome - totalExpenses;
+
+  return balance;
 }
 
 export function calculateSavings(income, expenses) {
-  return calculateBalance(income, expenses);
+  const savings = calculateBalance(income, expenses);
+
+  return savings;
 }
 
 export function groupByCategory(items) {
-  if (!Array.isArray(items)) return [];
+  if (!Array.isArray(items)) {
+    return [];
+  }
 
-  const categoryMap = {};
+  const categoryTotals = {};
 
-  items.forEach((item) => {
-    const category = item.category || "Other";
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+
+    let category = item.category;
+
+    if (!category) {
+      category = "Other";
+    }
+
     const amount = Number(item.amount);
 
-    if (!Number.isFinite(amount)) return;
+    if (!Number.isFinite(amount)) {
+      continue;
+    }
 
-    categoryMap[category] = (categoryMap[category] || 0) + amount;
-  });
+    if (categoryTotals[category] === undefined) {
+      categoryTotals[category] = 0;
+    }
 
-  return Object.entries(categoryMap).map(([category, total]) => ({
-    category,
-    total,
-  }));
-} 
+    categoryTotals[category] =
+      categoryTotals[category] + amount;
+  }
+
+  const groupedCategories = [];
+  const categoryNames = Object.keys(categoryTotals);
+
+  for (let index = 0; index < categoryNames.length; index++) {
+    const categoryName = categoryNames[index];
+
+    const categoryData = {
+      category: categoryName,
+      total: categoryTotals[categoryName],
+    };
+
+    groupedCategories.push(categoryData);
+  }
+
+  return groupedCategories;
+}
 
 export function groupByMonth(items) {
-  if (!Array.isArray(items)) return [];
+  if (!Array.isArray(items)) {
+    return [];
+  }
 
-  const monthMap = {};
+  const monthTotals = {};
 
-  items.forEach((item) => {
-    if (!item.date) return;
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+
+    if (!item.date) {
+      continue;
+    }
 
     const date = new Date(item.date);
-    if (Number.isNaN(date.getTime())) return;
+
+    if (Number.isNaN(date.getTime())) {
+      continue;
+    }
 
     const month = date.toLocaleString("default", {
       month: "short",
@@ -55,13 +105,31 @@ export function groupByMonth(items) {
     });
 
     const amount = Number(item.amount);
-    if (!Number.isFinite(amount)) return;
 
-    monthMap[month] = (monthMap[month] || 0) + amount;
-  });
+    if (!Number.isFinite(amount)) {
+      continue;
+    }
 
-  return Object.entries(monthMap).map(([month, total]) => ({
-    month,
-    total,
-  }));
+    if (monthTotals[month] === undefined) {
+      monthTotals[month] = 0;
+    }
+
+    monthTotals[month] = monthTotals[month] + amount;
+  }
+
+  const groupedMonths = [];
+  const monthNames = Object.keys(monthTotals);
+
+  for (let index = 0; index < monthNames.length; index++) {
+    const monthName = monthNames[index];
+
+    const monthData = {
+      month: monthName,
+      total: monthTotals[monthName],
+    };
+
+    groupedMonths.push(monthData);
+  }
+
+  return groupedMonths;
 }
