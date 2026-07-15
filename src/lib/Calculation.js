@@ -58,15 +58,14 @@ export function groupByCategory(items) {
       categoryTotals[category] = 0;
     }
 
-    categoryTotals[category] =
-      categoryTotals[category] + amount;
+    categoryTotals[category] = categoryTotals[category] + amount;
   }
 
   const groupedCategories = [];
   const categoryNames = Object.keys(categoryTotals);
 
-  for (let index = 0; index < categoryNames.length; index++) {
-    const categoryName = categoryNames[index];
+  for (let i = 0; i < categoryNames.length; i++) {
+    const categoryName = categoryNames[i];
 
     const categoryData = {
       category: categoryName,
@@ -86,8 +85,8 @@ export function groupByMonth(items) {
 
   const monthTotals = {};
 
-  for (let index = 0; index < items.length; index++) {
-    const item = items[index];
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
 
     if (!item.date) {
       continue;
@@ -120,8 +119,8 @@ export function groupByMonth(items) {
   const groupedMonths = [];
   const monthNames = Object.keys(monthTotals);
 
-  for (let index = 0; index < monthNames.length; index++) {
-    const monthName = monthNames[index];
+  for (let i = 0; i < monthNames.length; i++) {
+    const monthName = monthNames[i];
 
     const monthData = {
       month: monthName,
