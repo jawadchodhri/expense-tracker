@@ -33,6 +33,7 @@ export default function IncomePage() {
     saveIncome(updatedIncomeList);
   }
 
+
   return (
     <main className="min-h-screen bg-gray-100">
       <Navbar />
@@ -43,8 +44,8 @@ export default function IncomePage() {
         <section className="rounded-xl bg-white p-6 shadow-md">
           <h2 className="mb-4 text-2xl font-bold">Saved Income</h2>
 
-          <div className="mb-4 rounded-lg bg-green-100 p-4">
-            <p className="text-sm text-gray-600">Total Income</p>
+          <div className="mb-4 rounded-lg bg-green-400 p-4">
+            <p className="text-sm font-bold text-white">Total Income</p>
 
             <p className="text-2xl font-bold text-green-700">{totalIncome}</p>
           </div>
@@ -55,7 +56,7 @@ export default function IncomePage() {
             <div className="space-y-3">
               {incomeList.map(function (income) {
                 return (
-                  <div key={income.id} className="rounded-lg border p-3">
+                  <div key={income.id} className="rounded-lg bg-green-200 border p-3">
                     <h3 className="font-bold">{income.title}</h3>
 
                     <p>Amount: {income.amount}</p>
