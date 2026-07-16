@@ -33,6 +33,28 @@ export default function IncomePage() {
     saveIncome(updatedIncomeList);
   }
 
+  function handleDeleteIncome(incomeId) {
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this income?",
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    const updatedIncomeList = [];
+
+    for (let i = 0; i < incomeList.length; i++) {
+      const income = incomeList[i];
+
+      if (income.id !== incomeId) {
+        updatedIncomeList.push(income);
+      }
+    }
+
+    setIncomeList(updatedIncomeList);
+    saveIncome(updatedIncomeList);
+  }
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -56,12 +78,25 @@ export default function IncomePage() {
             <div className="space-y-3">
               {incomeList.map(function (income) {
                 return (
-                  <div key={income.id} className="rounded-lg bg-green-200 border p-3">
+                  <div
+                    key={income.id}
+                    className="rounded-lg bg-green-200 border p-3"
+                  >
                     <h3 className="font-bold">{income.title}</h3>
 
                     <p>Amount: {income.amount}</p>
                     <p>Category: {income.category}</p>
                     <p>Date: {income.date}</p>
+                    
+                    <button
+                      type="button"
+                      onClick={function () {
+                        handleDeleteIncome(income.id);
+                      }}
+                      className="mt-3 rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-400"
+                    >
+                      Delete
+                    </button>
                   </div>
                 );
               })}
