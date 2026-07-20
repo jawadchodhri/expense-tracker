@@ -87,16 +87,19 @@ export default function IncomePage() {
     <main className="min-h-screen bg-gray-100">
       <Navbar />
 
-      <div className="mx-auto grid max-w-5xl gap-6 p-6 md:grid-cols-2">
-        <IncomeForm
+      <div className="flex w-full flex-col items-start gap-6 p-6 lg:flex-row">
+        <div className="w-full lg:w-96 lg:shrink-0">
+          <IncomeForm
           onSubmit={incomeBeingEdited ? handleUpdateIncome : handleAddIncome}
           incomeBeingEdited={incomeBeingEdited}
           onCancelEdit={function () {
             setIncomeBeingEdited(null);
           }}
         />
+        </div>
+        
 
-        <section className="rounded-xl bg-white p-6 shadow-md">
+        <section className="w-full min-w-0 flex-1 rounded-xl bg-white p-6 shadow-md">
           <h2 className="mb-4 text-2xl font-bold">Saved Income</h2>
 
           <div className="mb-4 rounded-lg bg-green-400 p-4">
@@ -135,7 +138,7 @@ export default function IncomePage() {
                       onClick={function () {
                         setIncomeBeingEdited(income);
                       }}
-                      className="mr-2 mt-3 rounded-lg bg-blue-500 px-5 py-2 text-sm text-white hover:bg-blue-400"
+                      className="mr-2 mt-3 rounded-lg bg-blue-500 px-3 py-2 text-sm text-white hover:bg-blue-400"
                     >
                       Edit
                     </button>
