@@ -20,6 +20,7 @@ export default function Navbar() {
         <Link href="/dashboard">Dashboard</Link>
         <Link href="/income">Income</Link>
         <Link href="/expenses">Expenses</Link>
+        <Link href="/accounts">Accounts</Link>
 
         <button
           onClick={handleLogout}

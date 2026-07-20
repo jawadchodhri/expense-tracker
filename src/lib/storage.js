@@ -2,6 +2,7 @@ const USERS_KEY = "expense_tracker_users";
 const SESSION_KEY = "expense_tracker_session";
 const INCOME_KEY = "expense_tracker_income";
 const EXPENSE_KEY = "expense_tracker_expenses";
+const ACCOUNTS_KEY = "expense_tracker_accounts";
 
 function safeParse(value, fallback) {
   try {
@@ -20,6 +21,25 @@ export function getUsers() {
 export function saveUsers(users) {
   if (typeof window === "undefined") return;
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+//ACCOUNT
+export function getAccounts() {
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const savedAccounts = localStorage.getItem(ACCOUNTS_KEY);
+
+  return safeParse(savedAccounts, []);
+}
+
+export function saveAccounts(accounts) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 }
 
 // SESSION
