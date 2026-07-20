@@ -124,7 +124,8 @@ export default function IncomePage() {
                     <p>Category: {income.category}</p>
                     <p>Date: {income.date}</p>
 
-                    <button
+                    <div className="flex gap-1">
+                      <button
                       type="button"
                       onClick={function () {
                         handleDeleteIncome(income.id);
@@ -142,6 +143,7 @@ export default function IncomePage() {
                     >
                       Edit
                     </button>
+                    </div>
                   </div>
                 );
               })}
