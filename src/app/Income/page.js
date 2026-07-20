@@ -8,6 +8,7 @@ import { calculateTotal } from "@/lib/Calculation";
 
 export default function IncomePage() {
   const [incomeList, setIncomeList] = useState([]);
+  const [incomeBeingEdited, setIncomeBeingEdited] = useState(null);
   const totalIncome = calculateTotal(incomeList);
 
   useEffect(function () {
@@ -31,6 +32,32 @@ export default function IncomePage() {
 
     setIncomeList(updatedIncomeList);
     saveIncome(updatedIncomeList);
+  }
+
+  function handleUpdateIncome(incomeData) {
+    const updatedIncomeList = [];
+
+    for (let i = 0; i < incomeList.length; i++) {
+      const income = incomeList[i];
+
+      if (income.id === incomeBeingEdited.id) {
+        const updatedIncome = {
+          id: income.id,
+          title: incomeData.title,
+          amount: incomeData.amount,
+          category: incomeData.category,
+          date: incomeData.date,
+        };
+
+        updatedIncomeList.push(updatedIncome);
+      } else {
+        updatedIncomeList.push(income);
+      }
+    }
+
+    setIncomeList(updatedIncomeList);
+    saveIncome(updatedIncomeList);
+    setIncomeBeingEdited(null);
   }
 
   function handleDeleteIncome(incomeId) {
@@ -61,7 +88,13 @@ export default function IncomePage() {
       <Navbar />
 
       <div className="mx-auto grid max-w-5xl gap-6 p-6 md:grid-cols-2">
-        <IncomeForm onSubmit={handleAddIncome} />
+        <IncomeForm
+          onSubmit={incomeBeingEdited ? handleUpdateIncome : handleAddIncome}
+          incomeBeingEdited={incomeBeingEdited}
+          onCancelEdit={function () {
+            setIncomeBeingEdited(null);
+          }}
+        />
 
         <section className="rounded-xl bg-white p-6 shadow-md">
           <h2 className="mb-4 text-2xl font-bold">Saved Income</h2>
@@ -87,7 +120,7 @@ export default function IncomePage() {
                     <p>Amount: {income.amount}</p>
                     <p>Category: {income.category}</p>
                     <p>Date: {income.date}</p>
-                    
+
                     <button
                       type="button"
                       onClick={function () {
@@ -96,6 +129,15 @@ export default function IncomePage() {
                       className="mt-3 rounded-lg bg-red-500 px-3 py-2 text-sm text-white hover:bg-red-400"
                     >
                       Delete
+                    </button>
+                    <button
+                      type="button"
+                      onClick={function () {
+                        setIncomeBeingEdited(income);
+                      }}
+                      className="mr-2 mt-3 rounded-lg bg-blue-500 px-5 py-2 text-sm text-white hover:bg-blue-400"
+                    >
+                      Edit
                     </button>
                   </div>
                 );
