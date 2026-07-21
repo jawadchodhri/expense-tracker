@@ -30,7 +30,7 @@ export default function IncomeForm({
       } else {
         setSelectedAccountId("");
       }
-      
+
       setNewAccountName("");
     },
     [incomeBeingEdited],
@@ -49,8 +49,7 @@ export default function IncomeForm({
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (
-      title.trim() === "" || amount === "" || category.trim() === "" || date === "") {
+    if (title.trim() === "" || amount === "" || category.trim() === "" || date === "") {
       alert("Please fill all the fields.");
       return;
     }
@@ -58,6 +57,29 @@ export default function IncomeForm({
     if (Number(amount) <= 0) {
       alert("Amount must be greater than zero.");
       return;
+    }
+
+    if (selectedAccountId === "") {
+      alert("Please select an account.");
+      return;
+    }
+
+
+    let accountId;
+
+    if (selectedAccountId === "new") {
+      if (newAccountName.trim() === "") {
+        alert("Please enter the new account name.");
+        return;
+      }
+
+      accountId = onCreateAccount(newAccountName.trim());
+
+      if (accountId === null) {
+        return;
+      }
+    } else {
+      accountId = Number(selectedAccountId);
     }
 
     const incomeData = {
