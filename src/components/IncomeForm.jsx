@@ -25,8 +25,16 @@ export default function IncomeForm({
         setCategory(incomeBeingEdited.category);
         setDate(incomeBeingEdited.date);
       }
+      if (incomeBeingEdited.accountId !== undefined) {
+        setSelectedAccountId(String(incomeBeingEdited.accountId));
+      } else {
+        setSelectedAccountId("");
+      }
+      
+      setNewAccountName("");
     },
     [incomeBeingEdited],
+
   );
 
   function clearForm() {
@@ -34,6 +42,8 @@ export default function IncomeForm({
     setAmount("");
     setCategory("");
     setDate("");
+    setSelectedAccountId("");
+    setNewAccountName("");
   }
 
   function handleSubmit(event) {
