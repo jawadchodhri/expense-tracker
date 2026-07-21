@@ -6,12 +6,16 @@ import InputField from "@/components/InputField";
 export default function IncomeForm({
   onSubmit,
   incomeBeingEdited,
+  accounts,
+  onCreateAccount,
   onCancelEdit,
 }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
+  const [selectedAccountId, setSelectedAccountId] = useState("");
+  const [newAccountName, setNewAccountName] = useState("");
 
   useEffect(
     function () {
