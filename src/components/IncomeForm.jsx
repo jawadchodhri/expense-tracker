@@ -86,6 +86,7 @@ export default function IncomeForm({
       title: title.trim(),
       amount: Number(amount),
       category: category.trim(),
+      accountId: accountId,
       date: date,
     };
 
