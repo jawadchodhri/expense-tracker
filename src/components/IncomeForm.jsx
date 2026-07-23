@@ -147,6 +147,45 @@ export default function IncomeForm({
         }}
       />
 
+      <select
+        value={selectedAccountId}
+        onChange={function (event) {
+          setSelectedAccountId(event.target.value);
+        }}
+        className="mb-3 w-full rounded-lg border p-3 text-gray-700"
+      >
+        <option value="">
+          Select an account
+        </option>
+
+        {accounts.map(function (account) {
+          return (
+            <option
+              key={account.id}
+              value={account.id}
+            >
+              {account.name}
+            </option>
+          );
+        })}
+
+        <option value="new">
+          + Create new account
+        </option>
+      </select>
+
+      {selectedAccountId === "new" && (
+        <InputField
+          name="newAccountName"
+          type="text"
+          placeholder="New account name"
+          value={newAccountName}
+          onChange={function (event) {
+            setNewAccountName(event.target.value);
+          }}
+        />
+      )}
+
       <button
         type="submit"
         className="w-full rounded-lg bg-green-600 p-3 text-white hover:bg-green-500"
