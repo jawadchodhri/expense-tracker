@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import IncomeForm from "@/components/IncomeForm";
-import { getIncome, saveIncome, getAccounts, saveAccounts } from "@/lib/storage";
+import {
+  getIncome,
+  saveIncome,
+  getAccounts,
+  saveAccounts,
+} from "@/lib/storage";
 import { calculateTotal } from "@/lib/Calculation";
 import TransactionList from "@/components/TransactionList";
 
@@ -11,7 +16,7 @@ export default function IncomePage() {
   const [incomeList, setIncomeList] = useState([]);
   const [accountList, setAccountList] = useState([]);
   const [incomeBeingEdited, setIncomeBeingEdited] = useState(null);
-  const totalIncome = calculateTotal(incomeList); 
+  const totalIncome = calculateTotal(incomeList);
 
   useEffect(function () {
     const savedIncome = getIncome();
@@ -22,30 +27,30 @@ export default function IncomePage() {
   }, []);
 
   function handleCreateAccount(accountName) {
-  for (let i = 0; i < accountList.length; i++) {
-    const account = accountList[i];
+    for (let i = 0; i < accountList.length; i++) {
+      const account = accountList[i];
 
-    if (account.name.toLowerCase() === accountName.toLowerCase()) {
-      alert("An account with this name already exists.");
-      return null;
+      if (account.name.toLowerCase() === accountName.toLowerCase()) {
+        alert("An account with this name already exists.");
+        return null;
+      }
     }
+
+    const newAccount = {
+      id: Date.now(),
+      name: accountName,
+      openingBalance: 0,
+    };
+
+    const updatedAccountList = accountList.slice();
+
+    updatedAccountList.push(newAccount);
+
+    setAccountList(updatedAccountList);
+    saveAccounts(updatedAccountList);
+
+    return newAccount.id;
   }
-
-  const newAccount = {
-    id: Date.now(),
-    name: accountName,
-    openingBalance: 0,
-  };
-
-  const updatedAccountList = accountList.slice();
-
-  updatedAccountList.push(newAccount);
-
-  setAccountList(updatedAccountList);
-  saveAccounts(updatedAccountList);
-
-  return newAccount.id;
-}
 
   function handleAddIncome(incomeData) {
     const newIncome = {
