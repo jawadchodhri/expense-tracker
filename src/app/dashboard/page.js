@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getSession } from "@/lib/storage";
 import Navbar from "@/components/Navbar";
-import IncomeForm from "@/components/IncomeForm";
+// import IncomeForm from "@/components/IncomeForm";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -14,7 +14,8 @@ export default function DashboardPage() {
 
     if (!session) {
       router.push("/login");
-    }
+    } 
+    
   }, [router]);
 
   return (

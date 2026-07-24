@@ -63,8 +63,7 @@ export default function AccountsPage() {
 
       const isDifferentAccount = account.id !== accountBeingEdited.id;
 
-      const hasSameName =
-        account.name.toLowerCase() === accountData.name.toLowerCase();
+      const hasSameName = account.name.toLowerCase() === accountData.name.toLowerCase();
 
       if (isDifferentAccount && hasSameName) {
         alert("An account with this name already exists.");
@@ -151,9 +150,7 @@ export default function AccountsPage() {
       <div className="flex w-full flex-col items-start gap-6 p-6 lg:flex-row">
         <div className="w-full lg:w-96 lg:shrink-0">
           <AccountForm
-            onSubmit={
-              accountBeingEdited ? handleUpdateAccount : handleAddAccount
-            }
+            onSubmit={accountBeingEdited ? handleUpdateAccount : handleAddAccount}
             accountBeingEdited={accountBeingEdited}
             onCancelEdit={function () {
               setAccountBeingEdited(null);

@@ -50,9 +50,7 @@ export default function AccountForm({
       className="w-full rounded-xl bg-white p-6 shadow-md"
     >
       <h2 className="mb-5 text-2xl font-bold">
-        {accountBeingEdited
-          ? "Edit Account"
-          : "Add Account"}
+        {accountBeingEdited? "Edit Account" : "Add Account"}
       </h2>
 
       <InputField
@@ -69,9 +67,7 @@ export default function AccountForm({
         type="submit"
         className="w-full rounded-lg bg-blue-600 p-3 text-white hover:bg-blue-500"
       >
-        {accountBeingEdited
-          ? "Save Changes"
-          : "Add Account"}
+        {accountBeingEdited ? "Save Changes" : "Add Account"}
       </button>
 
       {accountBeingEdited && (
