@@ -17,6 +17,74 @@ export function calculateTotal(items) {
   return total;
 }
 
+export function calculateAccountBalance(
+  accountId,
+  incomeList,
+  expenseList,
+) {
+  let balance = 0;
+
+  if (Array.isArray(incomeList)) {
+    for (let i = 0; i < incomeList.length; i++) {
+      const income = incomeList[i];
+
+      if (
+        String(income.accountId) === String(accountId)
+      ) {
+        const amount = Number(income.amount);
+
+        if (Number.isFinite(amount)) {
+          balance = balance + amount;
+        }
+      }
+    }
+  }
+
+  if (Array.isArray(expenseList)) {
+    for (let i = 0; i < expenseList.length; i++) {
+      const expense = expenseList[i];
+
+      if (
+        String(expense.accountId) === String(accountId)
+      ) {
+        const amount = Number(expense.amount);
+
+        if (Number.isFinite(amount)) {
+          balance = balance - amount;
+        }
+      }
+    }
+  }
+
+  return balance;
+}
+
+export function calculateTotalAccountsBalance(
+  accounts,
+  incomeList,
+  expenseList,
+) {
+  if (!Array.isArray(accounts)) {
+    return 0;
+  }
+
+  let totalBalance = 0;
+
+  for (let i = 0; i < accounts.length; i++) {
+    const account = accounts[i];
+
+    const accountBalance = calculateAccountBalance(
+      account.id,
+      incomeList,
+      expenseList,
+    );
+
+    totalBalance = totalBalance + accountBalance;
+  }
+
+  return totalBalance;
+}
+
 export function calculateBalance(income, expenses) {
   const totalIncome = calculateTotal(income);
   const totalExpenses = calculateTotal(expenses);
