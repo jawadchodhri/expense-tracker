@@ -6,12 +6,14 @@ import InputField from "@/components/InputField";
 export default function ExpenseForm({
   onSubmit,
   expenseBeingEdited,
+  accounts = [],
   onCancelEdit,
 }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
+  const [selectedAccountId, setSelectedAccountId] = useState("");
 
   useEffect(
     function () {
@@ -20,6 +22,14 @@ export default function ExpenseForm({
         setAmount(String(expenseBeingEdited.amount));
         setCategory(expenseBeingEdited.category);
         setDate(expenseBeingEdited.date);
+
+        if (expenseBeingEdited.accountId !== undefined) {
+          setSelectedAccountId(
+            String(expenseBeingEdited.accountId),
+          );
+        } else {
+          setSelectedAccountId("");
+        }
       }
     },
     [expenseBeingEdited],
@@ -30,10 +40,18 @@ export default function ExpenseForm({
     setAmount("");
     setCategory("");
     setDate("");
+    setSelectedAccountId("");
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    if (selectedAccountId === "") {
+      alert("Please select an account.");
+      return;
+    }
+
+    const accountId = Number(selectedAccountId);
 
     if (title.trim() === "" || amount === "" || category.trim() === "" || date === "") {
       alert("Please fill all the fields.");
@@ -49,6 +67,7 @@ export default function ExpenseForm({
       title: title.trim(),
       amount: Number(amount),
       category: category.trim(),
+      accountId: accountId,
       date: date,
     };
 
@@ -99,6 +118,28 @@ export default function ExpenseForm({
           setCategory(event.target.value);
         }}
       />
+      <select
+        value={selectedAccountId}
+        onChange={function (event) {
+          setSelectedAccountId(event.target.value);
+        }}
+        className="mb-3 w-full rounded-lg border p-3 text-gray-700"
+      >
+        <option value="">
+          Select an account
+        </option>
+
+        {accounts.map(function (account) {
+          return (
+            <option
+              key={account.id}
+              value={account.id}
+            >
+              {account.name}
+            </option>
+          );
+        })}
+      </select>
 
       <InputField
         name="date"
