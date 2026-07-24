@@ -76,7 +76,7 @@ export default function ExpensePage() {
                 updatedExpenseList.push(expense)
             }
         }
-        setExpensesList(updatedExpenseList)
+        setExpenseList(updatedExpenseList)
         saveExpenses(updatedExpenseList)
     }
 

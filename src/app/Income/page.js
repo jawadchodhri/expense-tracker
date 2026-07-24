@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import IncomeForm from "@/components/IncomeForm";
-import {
-  getIncome,
-  saveIncome,
-  getAccounts,
-  saveAccounts,
-} from "@/lib/storage";
+import {getIncome, saveIncome, getAccounts} from "@/lib/storage";
 import { calculateTotal } from "@/lib/Calculation";
 import TransactionList from "@/components/TransactionList";
 
@@ -25,32 +20,6 @@ export default function IncomePage() {
     setIncomeList(savedIncome);
     setAccountList(savedAccounts);
   }, []);
-
-  function handleCreateAccount(accountName) {
-    for (let i = 0; i < accountList.length; i++) {
-      const account = accountList[i];
-
-      if (account.name.toLowerCase() === accountName.toLowerCase()) {
-        alert("An account with this name already exists.");
-        return null;
-      }
-    }
-
-    const newAccount = {
-      id: Date.now(),
-      name: accountName,
-      openingBalance: 0,
-    };
-
-    const updatedAccountList = accountList.slice();
-
-    updatedAccountList.push(newAccount);
-
-    setAccountList(updatedAccountList);
-    saveAccounts(updatedAccountList);
-
-    return newAccount.id;
-  }
 
   function handleAddIncome(incomeData) {
     const newIncome = {
@@ -130,7 +99,6 @@ export default function IncomePage() {
             onSubmit={incomeBeingEdited ? handleUpdateIncome : handleAddIncome}
             incomeBeingEdited={incomeBeingEdited}
             accounts={accountList}
-            onCreateAccount={handleCreateAccount}
             onCancelEdit={function () {
               setIncomeBeingEdited(null);
             }}
@@ -141,6 +109,7 @@ export default function IncomePage() {
           totalLabel="Total Income"
           total={totalIncome}
           transactions={incomeList}
+          accounts={accountList}
           emptyMessage="No income has been added yet."
           onEdit={function (income) {
             setIncomeBeingEdited(income);

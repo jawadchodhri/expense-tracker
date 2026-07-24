@@ -7,7 +7,6 @@ export default function IncomeForm({
   onSubmit,
   incomeBeingEdited,
   accounts,
-  onCreateAccount,
   onCancelEdit,
 }) {
   const [title, setTitle] = useState("");
@@ -15,29 +14,25 @@ export default function IncomeForm({
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [selectedAccountId, setSelectedAccountId] = useState("");
-  const [newAccountName, setNewAccountName] = useState("");
-
   useEffect(
-  function () {
-    if (incomeBeingEdited) {
-      setTitle(incomeBeingEdited.title);
-      setAmount(String(incomeBeingEdited.amount));
-      setCategory(incomeBeingEdited.category);
-      setDate(incomeBeingEdited.date);
+    function () {
+      if (incomeBeingEdited) {
+        setTitle(incomeBeingEdited.title);
+        setAmount(String(incomeBeingEdited.amount));
+        setCategory(incomeBeingEdited.category);
+        setDate(incomeBeingEdited.date);
 
-      if (incomeBeingEdited.accountId !== undefined) {
-        setSelectedAccountId(
-          String(incomeBeingEdited.accountId),
-        );
-      } else {
-        setSelectedAccountId("");
+        if (incomeBeingEdited.accountId !== undefined) {
+          setSelectedAccountId(
+            String(incomeBeingEdited.accountId),
+          );
+        } else {
+          setSelectedAccountId("");
+        }
       }
-
-      setNewAccountName("");
-    }
-  },
-  [incomeBeingEdited],
-);
+    },
+    [incomeBeingEdited],
+  );
 
   function clearForm() {
     setTitle("");
@@ -45,7 +40,6 @@ export default function IncomeForm({
     setCategory("");
     setDate("");
     setSelectedAccountId("");
-    setNewAccountName("");
   }
 
   function handleSubmit(event) {
@@ -66,23 +60,7 @@ export default function IncomeForm({
       return;
     }
 
-
-    let accountId;
-
-    if (selectedAccountId === "new") {
-      if (newAccountName.trim() === "") {
-        alert("Please enter the new account name.");
-        return;
-      }
-
-      accountId = onCreateAccount(newAccountName.trim());
-
-      if (accountId === null) {
-        return;
-      }
-    } else {
-      accountId = Number(selectedAccountId);
-    }
+    const accountId = Number(selectedAccountId);
 
     const incomeData = {
       title: title.trim(),
@@ -170,23 +148,7 @@ export default function IncomeForm({
             </option>
           );
         })}
-
-        <option value="new">
-          + Create new account
-        </option>
       </select>
-
-      {selectedAccountId === "new" && (
-        <InputField
-          name="newAccountName"
-          type="text"
-          placeholder="New account name"
-          value={newAccountName}
-          onChange={function (event) {
-            setNewAccountName(event.target.value);
-          }}
-        />
-      )}
 
       <button
         type="submit"
