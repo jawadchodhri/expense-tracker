@@ -5,6 +5,7 @@ export default function TransactionList({
   totalLabel,
   total,
   transactions,
+  accounts = [],
   emptyMessage,
   onEdit,
   onDelete,
@@ -32,6 +33,19 @@ export default function TransactionList({
       ) : (
         <div className="space-y-3">
           {transactions.map(function (transaction) {
+            let accountName = "Unassigned";
+
+            for (let i = 0; i < accounts.length; i++) {
+              const account = accounts[i];
+
+              if (
+                String(account.id) ===
+                String(transaction.accountId)
+              ) {
+                accountName = account.name;
+                break;
+              }
+            }
             return (
               <div
                 key={transaction.id}
@@ -43,6 +57,7 @@ export default function TransactionList({
 
                 <p>Amount: {transaction.amount}</p>
                 <p>Category: {transaction.category}</p>
+                <p>Account: {accountName}</p>
                 <p>Date: {transaction.date}</p>
 
                 <div className="flex gap-2">
