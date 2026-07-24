@@ -3,16 +3,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import {
-  getAccounts,
-  saveAccounts,
-  getIncome,
-  getExpenses,
-} from "@/lib/storage";
-import {
-  calculateAccountBalance,
-  calculateTotalAccountsBalance,
-} from "@/lib/Calculation";
+import { getAccounts, saveAccounts, getIncome, getExpenses } from "@/lib/storage";
+import { calculateAccountBalance, calculateTotalAccountsBalance } from "@/lib/Calculation";
 
 export default function AccountsPage() {
   const [accountList, setAccountList] = useState([]);

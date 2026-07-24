@@ -28,9 +28,7 @@ export function calculateAccountBalance(
     for (let i = 0; i < incomeList.length; i++) {
       const income = incomeList[i];
 
-      if (
-        String(income.accountId) === String(accountId)
-      ) {
+      if (String(income.accountId) === String(accountId)) {
         const amount = Number(income.amount);
 
         if (Number.isFinite(amount)) {
