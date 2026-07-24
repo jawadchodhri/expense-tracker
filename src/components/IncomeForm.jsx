@@ -18,24 +18,26 @@ export default function IncomeForm({
   const [newAccountName, setNewAccountName] = useState("");
 
   useEffect(
-    function () {
-      if (incomeBeingEdited) {
-        setTitle(incomeBeingEdited.title);
-        setAmount(String(incomeBeingEdited.amount));
-        setCategory(incomeBeingEdited.category);
-        setDate(incomeBeingEdited.date);
-      }
+  function () {
+    if (incomeBeingEdited) {
+      setTitle(incomeBeingEdited.title);
+      setAmount(String(incomeBeingEdited.amount));
+      setCategory(incomeBeingEdited.category);
+      setDate(incomeBeingEdited.date);
+
       if (incomeBeingEdited.accountId !== undefined) {
-        setSelectedAccountId(String(incomeBeingEdited.accountId));
+        setSelectedAccountId(
+          String(incomeBeingEdited.accountId),
+        );
       } else {
         setSelectedAccountId("");
       }
 
       setNewAccountName("");
-    },
-    [incomeBeingEdited],
-
-  );
+    }
+  },
+  [incomeBeingEdited],
+);
 
   function clearForm() {
     setTitle("");
