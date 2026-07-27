@@ -152,6 +152,7 @@ export default function ExpensePage() {
           totalLabel="Total Expenses"
           total={totalExpenses}
           transactions={expenseList}
+          transactionType="expense"
           accounts={accountList}
           emptyMessage="No expenses have been added yet."
           onEdit={function (expense) {

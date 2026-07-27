@@ -116,6 +116,7 @@ export default function IncomePage() {
           totalLabel="Total Income"
           total={totalIncome}
           transactions={incomeList}
+          transactionType="income"
           accounts={accountList}
           emptyMessage="No income has been added yet."
           onEdit={function (income) {

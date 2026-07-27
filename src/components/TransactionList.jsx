@@ -7,22 +7,35 @@ export default function TransactionList({
   transactions,
   accounts = [],
   emptyMessage,
+  transactionType = "income",
   onEdit,
   onDelete,
 }) {
+  let summaryColor = "bg-green-200";
+  let textColor = "text-green-800";
+  let transactionColor = "bg-green-250";
+  let amountSign = "+";
+
+  if (transactionType === "expense") {
+    summaryColor = "bg-red-200";
+    textColor = "text-red-800";
+    transactionColor = "bg-red-250";
+    amountSign = "-";
+  }
   return (
+
     <section className="w-full min-w-0 flex-1 rounded-xl bg-white p-6 shadow-md">
       <h2 className="mb-4 text-2xl font-bold">
         {title}
       </h2>
 
-      <div className="mb-4 rounded-lg bg-green-400 p-4">
-        <p className="text-sm font-bold text-white">
+      <div className={`mb-4 rounded-lg p-4 ${summaryColor}`}>
+        <p className={`text-sm font-bold ${textColor}`}>
           {totalLabel}
         </p>
 
-        <p className="text-2xl font-bold text-green-700">
-          {total}
+        <p className={`text-2xl font-bold ${textColor}`}>
+          PKR {Number(total).toLocaleString()}
         </p>
       </div>
 
@@ -49,13 +62,16 @@ export default function TransactionList({
             return (
               <div
                 key={transaction.id}
-                className="rounded-lg border bg-green-200 p-3"
+                className={`rounded-lg border p-3 ${transactionColor}`}
               >
                 <h3 className="font-bold">
                   {transaction.title}
                 </h3>
 
-                <p>Amount: {transaction.amount}</p>
+                <p className={`font-semibold ${textColor}`}>
+                  {amountSign} PKR{" "}
+                  {Number(transaction.amount).toLocaleString()}
+                </p>
                 <p>Category: {transaction.category}</p>
                 <p>Account: {accountName}</p>
                 <p>Date: {transaction.date}</p>
