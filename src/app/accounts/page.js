@@ -3,16 +3,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import {
-  getAccounts,
-  saveAccounts,
-  getIncome,
-  getExpenses,
-} from "@/lib/storage";
-import {
-  calculateAccountBalance,
-  calculateTotalAccountsBalance,
-} from "@/lib/Calculation";
+import { getAccounts, saveAccounts, getIncome, getExpenses } from "@/lib/storage";
+import { calculateAccountBalance, calculateTotalAccountsBalance } from "@/lib/Calculation";
 
 export default function AccountsPage() {
   const [accountList, setAccountList] = useState([]);
@@ -77,8 +69,7 @@ export default function AccountsPage() {
 
       const isDifferentAccount = account.id !== accountBeingEdited.id;
 
-      const hasSameName =
-        account.name.toLowerCase() === accountData.name.toLowerCase();
+      const hasSameName = account.name.toLowerCase() === accountData.name.toLowerCase();
 
       if (isDifferentAccount && hasSameName) {
         alert("An account with this name already exists.");
@@ -132,9 +123,7 @@ export default function AccountsPage() {
       return;
     }
 
-    const shouldDelete = window.confirm(
-      "Are you sure you want to delete this account?",
-    );
+    const shouldDelete = window.confirm("Are you sure you want to delete this account?");
 
     if (!shouldDelete) {
       return;

@@ -11,15 +11,15 @@ export default function TransactionList({
   onEdit,
   onDelete,
 }) {
-  let summaryColor = "bg-green-200";
+  let summaryColor = "bg-green-100";
   let textColor = "text-green-800";
-  let transactionColor = "bg-green-250";
+  let transactionColor = "bg-green-200";
   let amountSign = "+";
 
   if (transactionType === "expense") {
-    summaryColor = "bg-red-200";
+    summaryColor = "bg-red-100";
     textColor = "text-red-800";
-    transactionColor = "bg-red-250";
+    transactionColor = "bg-red-200";
     amountSign = "-";
   }
   return (

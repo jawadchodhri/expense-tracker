@@ -41,7 +41,10 @@ export default function AuthForm({
               type={field.type}
               placeholder={field.placeholder}
               value={field.value}
-              onChange={field.onChange} />;
+              onChange={field.onChange}
+              required={field.required}
+              minLength={field.minLength}
+            />;
           })}
         </div>
 
