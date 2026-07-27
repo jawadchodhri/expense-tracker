@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import ExpenseForm from "@/components/ExpenseForm";
 import TransactionList from "@/components/TransactionList";
-import { getExpenses, saveExpenses, getAccounts, getIncome } from "@/lib/storage";
+import {
+  getExpenses,
+  saveExpenses,
+  getAccounts,
+  getIncome,
+} from "@/lib/storage";
 import { calculateTotal, calculateAccountBalance } from "@/lib/Calculation";
 
 export default function ExpensePage() {
@@ -16,13 +21,19 @@ export default function ExpensePage() {
   const totalExpenses = calculateTotal(expenseList);
 
   useEffect(function () {
-    const savedExpenses = getExpenses();
-    const savedAccounts = getAccounts();
-    const savedIncome = getIncome();
+    const timer = setTimeout(function () {
+      const savedExpenses = getExpenses();
+      const savedAccounts = getAccounts();
+      const savedIncome = getIncome();
 
-    setExpenseList(savedExpenses);
-    setAccountList(savedAccounts);
-    setIncomeList(savedIncome);
+      setExpenseList(savedExpenses);
+      setAccountList(savedAccounts);
+      setIncomeList(savedIncome);
+    }, 0);
+
+    return function () {
+      clearTimeout(timer);
+    };
   }, []);
 
   function handleAddExpense(expenseData) {
@@ -126,9 +137,8 @@ export default function ExpensePage() {
       <div className="flex w-full flex-col items-start gap-6 p-6 lg:flex-row">
         <div className="w-full lg:w-96 lg:shrink-0">
           <ExpenseForm
-            onSubmit={
-              expenseBeingEdited ? handleUpdateExpense : handleAddExpense
-            }
+            key={expenseBeingEdited ? expenseBeingEdited.id : "new-expense"}
+            onSubmit={expenseBeingEdited ? handleUpdateExpense : handleAddExpense}
             expenseBeingEdited={expenseBeingEdited}
             accounts={accountList}
             onCancelEdit={function () {

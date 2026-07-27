@@ -3,8 +3,16 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import { getAccounts, saveAccounts, getIncome, getExpenses } from "@/lib/storage";
-import { calculateAccountBalance, calculateTotalAccountsBalance } from "@/lib/Calculation";
+import {
+  getAccounts,
+  saveAccounts,
+  getIncome,
+  getExpenses,
+} from "@/lib/storage";
+import {
+  calculateAccountBalance,
+  calculateTotalAccountsBalance,
+} from "@/lib/Calculation";
 
 export default function AccountsPage() {
   const [accountList, setAccountList] = useState([]);
@@ -13,13 +21,19 @@ export default function AccountsPage() {
   const [accountBeingEdited, setAccountBeingEdited] = useState(null);
 
   useEffect(function () {
-    const savedAccounts = getAccounts();
-    const savedIncome = getIncome();
-    const savedExpenses = getExpenses();
+    const timer = setTimeout(function () {
+      const savedAccounts = getAccounts();
+      const savedIncome = getIncome();
+      const savedExpenses = getExpenses();
 
-    setAccountList(savedAccounts);
-    setIncomeList(savedIncome);
-    setExpenseList(savedExpenses);
+      setAccountList(savedAccounts);
+      setIncomeList(savedIncome);
+      setExpenseList(savedExpenses);
+    }, 0);
+
+    return function () {
+      clearTimeout(timer);
+    };
   }, []);
 
   const totalBalance = calculateTotalAccountsBalance(
@@ -63,7 +77,8 @@ export default function AccountsPage() {
 
       const isDifferentAccount = account.id !== accountBeingEdited.id;
 
-      const hasSameName = account.name.toLowerCase() === accountData.name.toLowerCase();
+      const hasSameName =
+        account.name.toLowerCase() === accountData.name.toLowerCase();
 
       if (isDifferentAccount && hasSameName) {
         alert("An account with this name already exists.");
@@ -150,6 +165,7 @@ export default function AccountsPage() {
       <div className="flex w-full flex-col items-start gap-6 p-6 lg:flex-row">
         <div className="w-full lg:w-96 lg:shrink-0">
           <AccountForm
+            key={accountBeingEdited ? accountBeingEdited.id : "new-account"}
             onSubmit={accountBeingEdited ? handleUpdateAccount : handleAddAccount}
             accountBeingEdited={accountBeingEdited}
             onCancelEdit={function () {

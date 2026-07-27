@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import IncomeForm from "@/components/IncomeForm";
-import {getIncome, saveIncome, getAccounts} from "@/lib/storage";
+import { getIncome, saveIncome, getAccounts } from "@/lib/storage";
 import { calculateTotal } from "@/lib/Calculation";
 import TransactionList from "@/components/TransactionList";
 
@@ -14,11 +14,17 @@ export default function IncomePage() {
   const totalIncome = calculateTotal(incomeList);
 
   useEffect(function () {
-    const savedIncome = getIncome();
-    const savedAccounts = getAccounts();
+    const timer = setTimeout(function () {
+      const savedIncome = getIncome();
+      const savedAccounts = getAccounts();
 
-    setIncomeList(savedIncome);
-    setAccountList(savedAccounts);
+      setIncomeList(savedIncome);
+      setAccountList(savedAccounts);
+    }, 0);
+
+    return function () {
+      clearTimeout(timer);
+    };
   }, []);
 
   function handleAddIncome(incomeData) {
@@ -96,6 +102,7 @@ export default function IncomePage() {
       <div className="flex w-full flex-col items-start gap-6 p-6 lg:flex-row">
         <div className="w-full lg:w-96 lg:shrink-0">
           <IncomeForm
+            key={incomeBeingEdited ? incomeBeingEdited.id : "new-income"}
             onSubmit={incomeBeingEdited ? handleUpdateIncome : handleAddIncome}
             incomeBeingEdited={incomeBeingEdited}
             accounts={accountList}

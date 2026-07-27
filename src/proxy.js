@@ -21,12 +21,8 @@ export function proxy(request) {
 
   const hasSession = Boolean(sessionCookie?.value);
 
-  const isProtectedRoute = protectedRoutes.some(
-    function (route) {
-      return (
-        pathname === route ||
-        pathname.startsWith(route + "/")
-      );
+  const isProtectedRoute = protectedRoutes.some(function (route) {
+      return (pathname === route || pathname.startsWith(route + "/"));
     },
   );
 

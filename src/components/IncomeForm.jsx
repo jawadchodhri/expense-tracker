@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InputField from "@/components/InputField";
 
 export default function IncomeForm({
@@ -9,30 +9,38 @@ export default function IncomeForm({
   accounts,
   onCancelEdit,
 }) {
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [selectedAccountId, setSelectedAccountId] = useState("");
-  useEffect(
-    function () {
-      if (incomeBeingEdited) {
-        setTitle(incomeBeingEdited.title);
-        setAmount(String(incomeBeingEdited.amount));
-        setCategory(incomeBeingEdited.category);
-        setDate(incomeBeingEdited.date);
-
-        if (incomeBeingEdited.accountId !== undefined) {
-          setSelectedAccountId(
-            String(incomeBeingEdited.accountId),
-          );
-        } else {
-          setSelectedAccountId("");
-        }
-      }
-    },
-    [incomeBeingEdited],
+  const [title, setTitle] = useState(
+    incomeBeingEdited
+      ? incomeBeingEdited.title || ""
+      : "",
   );
+
+  const [amount, setAmount] = useState(
+    incomeBeingEdited &&
+      incomeBeingEdited.amount !== undefined
+      ? String(incomeBeingEdited.amount)
+      : "",
+  );
+
+  const [category, setCategory] = useState(
+    incomeBeingEdited
+      ? incomeBeingEdited.category || ""
+      : "",
+  );
+
+  const [date, setDate] = useState(
+    incomeBeingEdited
+      ? incomeBeingEdited.date || ""
+      : "",
+  );
+
+  const [selectedAccountId, setSelectedAccountId] =
+    useState(
+      incomeBeingEdited &&
+        incomeBeingEdited.accountId !== undefined
+        ? String(incomeBeingEdited.accountId)
+        : "",
+    );
 
   function clearForm() {
     setTitle("");

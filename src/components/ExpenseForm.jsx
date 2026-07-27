@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InputField from "@/components/InputField";
 
 export default function ExpenseForm({
@@ -9,31 +9,39 @@ export default function ExpenseForm({
   accounts = [],
   onCancelEdit,
 }) {
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [selectedAccountId, setSelectedAccountId] = useState("");
+  const [title, setTitle] = useState(
+  expenseBeingEdited
+    ? expenseBeingEdited.title || ""
+    : "",
+);
 
-  useEffect(
-    function () {
-      if (expenseBeingEdited) {
-        setTitle(expenseBeingEdited.title);
-        setAmount(String(expenseBeingEdited.amount));
-        setCategory(expenseBeingEdited.category);
-        setDate(expenseBeingEdited.date);
+const [amount, setAmount] = useState(
+  expenseBeingEdited &&
+    expenseBeingEdited.amount !== undefined
+    ? String(expenseBeingEdited.amount)
+    : "",
+);
 
-        if (expenseBeingEdited.accountId !== undefined) {
-          setSelectedAccountId(
-            String(expenseBeingEdited.accountId),
-          );
-        } else {
-          setSelectedAccountId("");
-        }
-      }
-    },
-    [expenseBeingEdited],
+const [category, setCategory] = useState(
+  expenseBeingEdited
+    ? expenseBeingEdited.category || ""
+    : "",
+);
+
+const [date, setDate] = useState(
+  expenseBeingEdited
+    ? expenseBeingEdited.date || ""
+    : "",
+);
+
+const [selectedAccountId, setSelectedAccountId] =
+  useState(
+    expenseBeingEdited &&
+      expenseBeingEdited.accountId !== undefined
+      ? String(expenseBeingEdited.accountId)
+      : "",
   );
+
 
   function clearForm() {
     setTitle("");

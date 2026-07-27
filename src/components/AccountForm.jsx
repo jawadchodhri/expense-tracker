@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InputField from "@/components/InputField";
 
 export default function AccountForm({
@@ -8,15 +8,10 @@ export default function AccountForm({
   accountBeingEdited,
   onCancelEdit,
 }) {
-  const [accountName, setAccountName] = useState("");
-
-  useEffect(
-    function () {
-      if (accountBeingEdited) {
-        setAccountName(accountBeingEdited.name || "");
-      }
-    },
-    [accountBeingEdited],
+  const [accountName, setAccountName] = useState(
+    accountBeingEdited
+      ? accountBeingEdited.name || ""
+      : "",
   );
 
   function clearForm() {
@@ -50,7 +45,7 @@ export default function AccountForm({
       className="w-full rounded-xl bg-white p-6 shadow-md"
     >
       <h2 className="mb-5 text-2xl font-bold">
-        {accountBeingEdited? "Edit Account" : "Add Account"}
+        {accountBeingEdited ? "Edit Account" : "Add Account"}
       </h2>
 
       <InputField
