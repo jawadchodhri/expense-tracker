@@ -14,6 +14,23 @@ function safeParse(value, fallback) {
   }
 }
 
+function getUserStorageKey(baseKey) {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const session = safeParse(
+    localStorage.getItem(SESSION_KEY),
+    null,
+  );
+
+  if (!session || session.id === undefined) {
+    return null;
+  }
+
+  return baseKey + "_" + session.id;
+}
+
 // USERS
 export function getUsers() {
   if (typeof window === "undefined") return [];
@@ -31,9 +48,16 @@ export function getAccounts() {
     return [];
   }
 
-  const savedAccounts = localStorage.getItem(ACCOUNTS_KEY);
+  const userKey = getUserStorageKey(ACCOUNTS_KEY);
 
-  return safeParse(savedAccounts, []);
+  if (!userKey) {
+    return [];
+  }
+
+  return safeParse(
+    localStorage.getItem(userKey),
+    [],
+  );
 }
 
 export function saveAccounts(accounts) {
@@ -41,8 +65,18 @@ export function saveAccounts(accounts) {
     return;
   }
 
-  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  const userKey = getUserStorageKey(ACCOUNTS_KEY);
+
+  if (!userKey) {
+    return;
+  }
+
+  localStorage.setItem(
+    userKey,
+    JSON.stringify(accounts),
+  );
 }
+
 
 // SESSION
 export function getSession() {
@@ -84,22 +118,71 @@ export function clearSession() {
 
 // INCOME
 export function getIncome() {
-  if (typeof window === "undefined") return [];
-  return safeParse(localStorage.getItem(INCOME_KEY), []);
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const userKey = getUserStorageKey(INCOME_KEY);
+
+  if (!userKey) {
+    return [];
+  }
+
+  return safeParse(
+    localStorage.getItem(userKey),
+    [],
+  );
 }
 
 export function saveIncome(income) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(INCOME_KEY, JSON.stringify(income));
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const userKey = getUserStorageKey(INCOME_KEY);
+
+  if (!userKey) {
+    return;
+  }
+
+  localStorage.setItem(
+    userKey,
+    JSON.stringify(income),
+  );
 }
+
 
 // EXPENSES
 export function getExpenses() {
-  if (typeof window === "undefined") return [];
-  return safeParse(localStorage.getItem(EXPENSE_KEY), []);
+  if (typeof window === "undefined") {
+    return [];
+  }
+
+  const userKey = getUserStorageKey(EXPENSE_KEY);
+
+  if (!userKey) {
+    return [];
+  }
+
+  return safeParse(
+    localStorage.getItem(userKey),
+    [],
+  );
 }
 
 export function saveExpenses(expenses) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(EXPENSE_KEY, JSON.stringify(expenses));
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const userKey = getUserStorageKey(EXPENSE_KEY);
+
+  if (!userKey) {
+    return;
+  }
+
+  localStorage.setItem(
+    userKey,
+    JSON.stringify(expenses),
+  );
 }
