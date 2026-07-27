@@ -3,6 +3,8 @@ const SESSION_KEY = "expense_tracker_session";
 const INCOME_KEY = "expense_tracker_income";
 const EXPENSE_KEY = "expense_tracker_expenses";
 const ACCOUNTS_KEY = "expense_tracker_accounts";
+const AUTH_COOKIE_NAME = "expense_tracker_auth";
+const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 function safeParse(value, fallback) {
   try {
@@ -49,13 +51,35 @@ export function getSession() {
 }
 
 export function saveSession(user) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  localStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify(user),
+  );
+
+  document.cookie =
+    AUTH_COOKIE_NAME +
+    "=" +
+    encodeURIComponent(String(user.id)) +
+    "; path=/" +
+    "; max-age=" +
+    AUTH_COOKIE_MAX_AGE +
+    "; SameSite=Lax";
 }
 
 export function clearSession() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+    return;
+  }
+
   localStorage.removeItem(SESSION_KEY);
+
+  document.cookie =
+    AUTH_COOKIE_NAME +
+    "=; path=/; max-age=0; SameSite=Lax";
 }
 
 // INCOME

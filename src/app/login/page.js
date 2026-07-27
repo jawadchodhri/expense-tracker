@@ -40,7 +40,18 @@ export default function LoginPage() {
     }
 
     saveSession(user);
-    router.push("/dashboard");
+
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const callbackUrl = searchParams.get("callbackUrl");
+
+    const isSafeCallback = callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//");
+
+    if (isSafeCallback) {
+      router.replace(callbackUrl);
+    } else {
+      router.replace("/dashboard");
+    }
   }
 
   return (

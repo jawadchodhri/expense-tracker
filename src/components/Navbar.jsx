@@ -8,9 +8,10 @@ export default function Navbar() {
   const router = useRouter();
 
   function handleLogout() {
-    clearSession();
-    router.push("/login");
-  }
+  clearSession();
+  router.replace("/login");
+  router.refresh();
+}
 
   return (
     <nav className="w-full bg-sky-300 shadow px-6 py-4 flex justify-between items-center">
