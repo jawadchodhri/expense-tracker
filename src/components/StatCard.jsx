@@ -1,4 +1,4 @@
-export default function StatCard({ title, value, color = "blue" }) {
+export default function StatCard({ title, value, color }) {
   let valueColor = "text-blue-600";
 
   if (color === "green") {
@@ -13,9 +13,7 @@ export default function StatCard({ title, value, color = "blue" }) {
     <div className="rounded-xl bg-white p-5 shadow-md">
       <p className="text-sm font-medium text-gray-500">{title}</p>
 
-      <p className={`mt-2 text-3xl font-bold ${valueColor}`}>
-        {value}
-      </p>
+      <p className={`mt-2 text-3xl font-bold ${valueColor}`}>{value}</p>
     </div>
   );
 }
