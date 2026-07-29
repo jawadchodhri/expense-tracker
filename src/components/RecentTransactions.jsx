@@ -44,12 +44,8 @@ export default function RecentTransactions({
         Recent Transactions
       </h2>
 
-      {recentTransactions.length === 0 ? (
-        <p className="text-gray-500">
-          No transactions have been added yet.
-        </p>
-      ) : (
-        <div className="space-y-3">
+      {recentTransactions.length === 0 ? (<p className="text-gray-500">No transactions have been added yet.</p>)
+      : (<div className="space-y-3">
           {recentTransactions.map(function (transaction) {
             const isIncome = transaction.type === "income";
 

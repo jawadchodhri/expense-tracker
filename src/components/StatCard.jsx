@@ -1,4 +1,4 @@
-export default function StatCard({ title, value, color }) {
+export default function StatCard({ title, value, color = "blue" }) {
   let valueColor = "text-blue-600";
 
   if (color === "green") {
