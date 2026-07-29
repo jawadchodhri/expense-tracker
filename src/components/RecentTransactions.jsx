@@ -6,17 +6,11 @@ export default function RecentTransactions({
   const allTransactions = [];
 
   for (let i = 0; i < incomeList.length; i++) {
-    allTransactions.push({
-      ...incomeList[i],
-      type: "income",
-    });
+    allTransactions.push({...incomeList[i], type: "income"});
   }
 
   for (let i = 0; i < expenseList.length; i++) {
-    allTransactions.push({
-      ...expenseList[i],
-      type: "expense",
-    });
+    allTransactions.push({...expenseList[i], type: "expense"});
   }
 
   allTransactions.sort(function (firstTransaction, secondTransaction) {
