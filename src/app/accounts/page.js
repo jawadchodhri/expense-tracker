@@ -188,13 +188,9 @@ export default function AccountsPage() {
                   >
                     <h3 className="text-lg font-bold">{account.name}</h3>
 
-                    <p className="mt-2 text-sm text-gray-600">
-                      Current Balance
-                    </p>
+                    <p className="mt-2 text-sm text-gray-600">Current Balance</p>
 
-                    <p className="text-2xl font-bold text-blue-700">
-                      {accountBalance}
-                    </p>
+                    <p className="text-2xl font-bold text-blue-700">{accountBalance}</p>
                     <div className="mt-4 flex gap-2">
                       <button
                         type="button"
