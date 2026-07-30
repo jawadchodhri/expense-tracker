@@ -49,14 +49,10 @@ export default function RecentTransactions({
                 className="flex items-center justify-between rounded-lg border p-4"
               >
                 <div>
-                  <p className="font-semibold">
-                    {transaction.title}
-                  </p>
+                  <p className="font-semibold">{transaction.title}</p>
 
                   <p className="text-sm text-gray-500">
-                    {getAccountName(transaction.accountId)}
-                    {" • "}
-                    {transaction.date}
+                    {getAccountName(transaction.accountId)}{" • "}{transaction.date}
                   </p>
                 </div>
 
