@@ -4,10 +4,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import StatCard from "@/components/StatCard";
-import { getSession, getIncome, getExpenses, getAccounts } from "@/lib/storage";
+import {
+  getUsers,
+  getSession,
+  getIncome,
+  getExpenses,
+  getAccounts,
+} from "@/lib/storage";
 import { calculateTotal, calculateBalance } from "@/lib/Calculation";
 import RecentTransactions from "@/components/RecentTransactions";
 import Charts from "@/components/Charts";
+import CategoryCharts from "@/components/CategoryCharts";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -15,6 +22,9 @@ export default function DashboardPage() {
   const [incomeList, setIncomeList] = useState([]);
   const [expenseList, setExpenseList] = useState([]);
   const [accountList, setAccountList] = useState([]);
+  const [userName, setUserName] = useState("");
+
+  const user = getUsers;
 
   useEffect(
     function () {
@@ -24,6 +34,8 @@ export default function DashboardPage() {
         router.push("/login");
         return;
       }
+      
+      setUserName(session.name);
 
       const savedIncome = getIncome();
       const savedExpenses = getExpenses();
@@ -45,12 +57,10 @@ export default function DashboardPage() {
       <Navbar />
 
       <section className="p-6">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-
+        <h1 className="text-3xl font-bold">Welcome, {userName || "User"}</h1>{" "}
         <p className="mt-1 text-gray-600">
           Here is a summary of your finances.
         </p>
-
         <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Income"
@@ -78,8 +88,8 @@ export default function DashboardPage() {
         </div>
         <div className="mt-6">
           <Charts incomeList={incomeList} expenseList={expenseList} />
+          <CategoryCharts incomeList={incomeList} expenseList={expenseList} />
         </div>
-
         <div className="mt-6">
           <RecentTransactions
             incomeList={incomeList}
