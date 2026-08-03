@@ -3,23 +3,17 @@
 import { useState } from "react";
 import InputField from "@/components/InputField";
 
+
 export default function ExpenseForm({
   onSubmit,
   expenseBeingEdited,
   accounts = [],
   onCancelEdit,
 }) {
-  const [title, setTitle] = useState(
-  expenseBeingEdited
-    ? expenseBeingEdited.title || ""
-    : "",
-);
+  const [title, setTitle] = useState(expenseBeingEdited ? expenseBeingEdited.title || "" : "");
 
 const [amount, setAmount] = useState(
-  expenseBeingEdited &&
-    expenseBeingEdited.amount !== undefined
-    ? String(expenseBeingEdited.amount)
-    : "",
+  expenseBeingEdited && expenseBeingEdited.amount !== undefined ? String(expenseBeingEdited.amount) : "",
 );
 
 const [category, setCategory] = useState(
@@ -36,10 +30,8 @@ const [date, setDate] = useState(
 
 const [selectedAccountId, setSelectedAccountId] =
   useState(
-    expenseBeingEdited &&
-      expenseBeingEdited.accountId !== undefined
-      ? String(expenseBeingEdited.accountId)
-      : "",
+    expenseBeingEdited && expenseBeingEdited.accountId !== undefined
+      ? String(expenseBeingEdited.accountId) : "",
   );
 
 
