@@ -21,7 +21,6 @@ export default function ExpensePage() {
   const totalExpenses = calculateTotal(expenseList);
 
   useEffect(function () {
-    const timer = setTimeout(function () {
       const savedExpenses = getExpenses();
       const savedAccounts = getAccounts();
       const savedIncome = getIncome();
@@ -29,11 +28,6 @@ export default function ExpensePage() {
       setExpenseList(savedExpenses);
       setAccountList(savedAccounts);
       setIncomeList(savedIncome);
-    }, 0);
-
-    return function () {
-      clearTimeout(timer);
-    };
   }, []);
 
   function handleAddExpense(expenseData) {
