@@ -16,9 +16,7 @@ export default function DashboardPage() {
   const [expenseList, setExpenseList] = useState([]);
   const [accountList, setAccountList] = useState([]);
 
-  useEffect(
-    function () {
-      const timer = setTimeout(function () {
+  useEffect(function () {
         const session = getSession();
 
         if (!session) {
@@ -33,13 +31,7 @@ export default function DashboardPage() {
         setIncomeList(savedIncome);
         setExpenseList(savedExpenses);
         setAccountList(savedAccounts);
-      }, 0);
-
-      return function () {
-        clearTimeout(timer);
-      };
-    },
-    [router],
+    }, [router],
   );
 
   const totalIncome = calculateTotal(incomeList);
