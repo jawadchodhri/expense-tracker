@@ -14,17 +14,11 @@ export default function IncomePage() {
   const totalIncome = calculateTotal(incomeList);
 
   useEffect(function () {
-    const timer = setTimeout(function () {
       const savedIncome = getIncome();
       const savedAccounts = getAccounts();
 
       setIncomeList(savedIncome);
       setAccountList(savedAccounts);
-    }, 0);
-
-    return function () {
-      clearTimeout(timer);
-    };
   }, []);
 
   function handleAddIncome(incomeData) {

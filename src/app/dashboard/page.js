@@ -16,22 +16,24 @@ export default function DashboardPage() {
   const [expenseList, setExpenseList] = useState([]);
   const [accountList, setAccountList] = useState([]);
 
-  useEffect(function () {
-        const session = getSession();
+  useEffect(
+    function () {
+      const session = getSession();
 
-        if (!session) {
-          router.push("/login");
-          return;
-        }
+      if (!session) {
+        router.push("/login");
+        return;
+      }
 
-        const savedIncome = getIncome();
-        const savedExpenses = getExpenses();
-        const savedAccounts = getAccounts();
+      const savedIncome = getIncome();
+      const savedExpenses = getExpenses();
+      const savedAccounts = getAccounts();
 
-        setIncomeList(savedIncome);
-        setExpenseList(savedExpenses);
-        setAccountList(savedAccounts);
-    }, [router],
+      setIncomeList(savedIncome);
+      setExpenseList(savedExpenses);
+      setAccountList(savedAccounts);
+    },
+    [router],
   );
 
   const totalIncome = calculateTotal(incomeList);
@@ -45,7 +47,9 @@ export default function DashboardPage() {
       <section className="p-6">
         <h1 className="text-3xl font-bold">Dashboard</h1>
 
-        <p className="mt-1 text-gray-600">Here is a summary of your finances.</p>
+        <p className="mt-1 text-gray-600">
+          Here is a summary of your finances.
+        </p>
 
         <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
@@ -72,15 +76,17 @@ export default function DashboardPage() {
             color="purple"
           />
         </div>
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <Charts incomeList={incomeList} expenseList={expenseList} />
+        <div className="mt-6">
+          <Charts incomeList={incomeList} expenseList={expenseList} />
+        </div>
 
-            <RecentTransactions
-              incomeList={incomeList}
-              expenseList={expenseList}
-              accounts={accountList}
-            />
-          </div>
+        <div className="mt-6">
+          <RecentTransactions
+            incomeList={incomeList}
+            expenseList={expenseList}
+            accounts={accountList}
+          />
+        </div>
       </section>
     </main>
   );

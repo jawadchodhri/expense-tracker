@@ -29,8 +29,7 @@ export default function LoginPage() {
 
     const user = users.find(function (currentUser) {
       return (
-        currentUser.email.toLowerCase() === email &&
-        currentUser.password === password
+        currentUser.email.toLowerCase() === email && currentUser.password === password
       );
     });
 
