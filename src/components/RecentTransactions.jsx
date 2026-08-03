@@ -57,11 +57,7 @@ export default function RecentTransactions({
                 </div>
 
                 <p
-                  className={
-                    isIncome
-                      ? "font-bold text-green-600"
-                      : "font-bold text-red-600"
-                  }
+                  className={isIncome ? "font-bold text-green-600" : "font-bold text-red-600"}
                 >
                   {isIncome ? "+" : "-"} PKR{" "}
                   {Number(transaction.amount).toLocaleString()}
