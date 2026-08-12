@@ -4,13 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import StatCard from "@/components/StatCard";
-import {
-  getUsers,
-  getSession,
-  getIncome,
-  getExpenses,
-  getAccounts,
-} from "@/lib/storage";
+import { getSession, getIncome, getExpenses, getAccounts } from "@/lib/storage";
 import { calculateTotal, calculateBalance } from "@/lib/Calculation";
 import RecentTransactions from "@/components/RecentTransactions";
 import Charts from "@/components/Charts";
@@ -23,8 +17,6 @@ export default function DashboardPage() {
   const [expenseList, setExpenseList] = useState([]);
   const [accountList, setAccountList] = useState([]);
   const [userName, setUserName] = useState("");
-
-  const user = getUsers;
 
   useEffect(
     function () {
