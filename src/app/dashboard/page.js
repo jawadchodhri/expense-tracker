@@ -34,7 +34,7 @@ export default function DashboardPage() {
         router.push("/login");
         return;
       }
-      
+
       setUserName(session.name);
 
       const savedIncome = getIncome();
@@ -86,7 +86,7 @@ export default function DashboardPage() {
             color="purple"
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-6 space-y-6">
           <Charts incomeList={incomeList} expenseList={expenseList} />
           <CategoryCharts incomeList={incomeList} expenseList={expenseList} />
         </div>
