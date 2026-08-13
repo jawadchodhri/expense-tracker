@@ -50,9 +50,7 @@ export default function DashboardPage() {
 
       <section className="p-6">
         <h1 className="text-3xl font-bold">Welcome, {userName || "User"}</h1>{" "}
-        <p className="mt-1 text-gray-600">
-          Here is a summary of your finances.
-        </p>
+        <p className="mt-1 text-gray-600">Here is a summary of your finances.</p>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Income"
