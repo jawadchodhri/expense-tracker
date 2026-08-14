@@ -28,9 +28,7 @@ export default function AuthForm({
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-xl bg-white p-6 shadow-md"
       >
-        <h1 className="text-center text-2xl font-bold text-gray-900">
-          {title}
-        </h1>
+        <h1 className="text-center text-2xl font-bold text-gray-900">{title}</h1>
 
 
         <div className="mt-5">
