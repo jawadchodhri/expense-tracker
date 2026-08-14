@@ -9,9 +9,7 @@ export default function AccountForm({
   onCancelEdit,
 }) {
   const [accountName, setAccountName] = useState(
-    accountBeingEdited
-      ? accountBeingEdited.name || ""
-      : "",
+    accountBeingEdited ? accountBeingEdited.name || "" : "",
   );
 
   function clearForm() {
