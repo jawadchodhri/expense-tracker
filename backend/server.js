@@ -6,9 +6,7 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-app.use(
-  cors({ origin: "http://localhost:3000" }),
-);
+app.use(cors({ origin: "http://localhost:3000" }));
 
 app.use(express.json());
 
@@ -17,7 +15,5 @@ app.get("/api/health", function (request, response) {
 });
 
 app.listen(port, function () {
-  console.log(
-    `Backend is running at http://localhost:${port}`,
-  );
+  console.log(`Backend is running at http://localhost:${port}`,);
 });
