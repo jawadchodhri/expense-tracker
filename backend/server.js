@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import dns from "node:dns";
+import authRoutes from "./routes/authRoutes.js";
 import { connectDatabase } from "./config/database.js";
 
 dns.setServers([
@@ -10,6 +11,7 @@ dns.setServers([
 ]);
 
 const app = express();
+app.use("/api/auth", authRoutes);
 
 const port = process.env.PORT || 5000;
 
