@@ -11,13 +11,15 @@ dns.setServers([
 ]);
 
 const app = express();
-app.use("/api/auth", authRoutes);
 
 const port = process.env.PORT || 5000;
 
 app.use(cors({ origin: "http://localhost:3000" }));
 
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+
 
 app.get("/api/health", function (request, response) {
   response.json({ message: "Expense Tracker backend is working." });
