@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import { getAccounts, saveAccounts, getIncome, getExpenses } from "@/lib/storage";
-import { calculateAccountBalance, calculateTotalAccountsBalance } from "@/lib/Calculation";
+import { saveAccounts, getIncome, getExpenses } from "@/lib/storage";
+import {
+  calculateAccountBalance,
+  calculateTotalAccountsBalance,
+} from "@/lib/Calculation";
 
 export default function AccountsPage() {
   const [accountList, setAccountList] = useState([]);
@@ -14,14 +17,33 @@ export default function AccountsPage() {
 
   useEffect(function () {
     const timer = setTimeout(function () {
-      const savedAccounts = getAccounts();
       const savedIncome = getIncome();
       const savedExpenses = getExpenses();
 
-      setAccountList(savedAccounts);
       setIncomeList(savedIncome);
       setExpenseList(savedExpenses);
     }, 0);
+
+    async function loadAccounts() {
+      try {
+        const response = await fetch("http://localhost:5000/api/accounts", {
+          credentials: "include",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message);
+          return;
+        }
+
+        setAccountList(data.accounts);
+      } catch (error) {
+        alert("Could not load accounts from the backend.");
+      }
+    }
+
+    loadAccounts();
 
     return function () {
       clearTimeout(timer);
@@ -34,33 +56,37 @@ export default function AccountsPage() {
     expenseList,
   );
 
-  function handleAddAccount(accountData) {
-    let accountAlreadyExists = false;
+  async function handleAddAccount(accountData) {
+    try {
+      const response = await fetch("http://localhost:5000/api/accounts", {
+        method: "POST",
 
-    for (let i = 0; i < accountList.length; i++) {
-      const account = accountList[i];
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      if (account.name.toLowerCase() === accountData.name.toLowerCase()) {
-        accountAlreadyExists = true;
+        credentials: "include",
+
+        body: JSON.stringify({
+          name: accountData.name,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
+
+      const updatedAccountList = accountList.slice();
+
+      updatedAccountList.unshift(data.account);
+
+      setAccountList(updatedAccountList);
+    } catch (error) {
+      alert("Could not create the account.");
     }
-
-    if (accountAlreadyExists) {
-      alert("An account with this name already exists.");
-      return;
-    }
-
-    const newAccount = {
-      id: Date.now(),
-      name: accountData.name,
-    };
-
-    const updatedAccountList = accountList.slice();
-
-    updatedAccountList.push(newAccount);
-
-    setAccountList(updatedAccountList);
-    saveAccounts(updatedAccountList);
   }
 
   function handleUpdateAccount(accountData) {
@@ -69,7 +95,8 @@ export default function AccountsPage() {
 
       const isDifferentAccount = account.id !== accountBeingEdited.id;
 
-      const hasSameName = account.name.toLowerCase() === accountData.name.toLowerCase();
+      const hasSameName =
+        account.name.toLowerCase() === accountData.name.toLowerCase();
 
       if (isDifferentAccount && hasSameName) {
         alert("An account with this name already exists.");
@@ -123,7 +150,9 @@ export default function AccountsPage() {
       return;
     }
 
-    const shouldDelete = window.confirm("Are you sure you want to delete this account?");
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this account?",
+    );
 
     if (!shouldDelete) {
       return;
@@ -155,7 +184,9 @@ export default function AccountsPage() {
         <div className="w-full lg:w-96 lg:shrink-0">
           <AccountForm
             key={accountBeingEdited ? accountBeingEdited.id : "new-account"}
-            onSubmit={accountBeingEdited ? handleUpdateAccount : handleAddAccount}
+            onSubmit={
+              accountBeingEdited ? handleUpdateAccount : handleAddAccount
+            }
             accountBeingEdited={accountBeingEdited}
             onCancelEdit={function () {
               setAccountBeingEdited(null);
@@ -188,9 +219,13 @@ export default function AccountsPage() {
                   >
                     <h3 className="text-lg font-bold">{account.name}</h3>
 
-                    <p className="mt-2 text-sm text-gray-600">Current Balance</p>
+                    <p className="mt-2 text-sm text-gray-600">
+                      Current Balance
+                    </p>
 
-                    <p className="text-2xl font-bold text-blue-700">{accountBalance}</p>
+                    <p className="text-2xl font-bold text-blue-700">
+                      {accountBalance}
+                    </p>
                     <div className="mt-4 flex gap-2">
                       <button
                         type="button"
