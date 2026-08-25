@@ -151,3 +151,13 @@ export function logoutUser(request, response) {
     message: "Logout successful.",
   });
 }
+
+export function getCurrentUser(request, response) {
+  return response.status(200).json({
+    user: {
+      id: request.user._id,
+      name: request.user.name,
+      email: request.user.email,
+    },
+  });
+}
