@@ -1,7 +1,8 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
-import { getUsers, saveSession } from "@/lib/storage";
+import { saveSession } from "@/lib/storage";
 
 const loginFields = [
   {
@@ -21,35 +22,70 @@ const loginFields = [
 export default function LoginPage() {
   const router = useRouter();
 
-  function handleLogin(formData) {
-    const email = formData.email.trim().toLowerCase();
+  async function handleLogin(formData) {
+    const email = formData.email
+      .trim()
+      .toLowerCase();
+
     const password = formData.password;
 
-    const users = getUsers();
-
-    const user = users.find(function (currentUser) {
-      return (
-        currentUser.email.toLowerCase() === email && currentUser.password === password
-      );
-    });
-
-    if (!user) {
-      alert("Email or password is incorrect.");
+    if (email === "" || password === "") {
+      alert("Please provide email and password.");
       return;
     }
 
-    saveSession(user);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
 
-    const searchParams = new URLSearchParams(window.location.search);
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-    const callbackUrl = searchParams.get("callbackUrl");
+          credentials: "include",
 
-    const isSafeCallback = callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//");
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        },
+      );
 
-    if (isSafeCallback) {
-      router.replace(callbackUrl);
-    } else {
-      router.replace("/dashboard");
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      saveSession(data.user);
+
+      const searchParams =
+        new URLSearchParams(
+          window.location.search,
+        );
+
+      const callbackUrl =
+        searchParams.get("callbackUrl");
+
+      const isSafeCallback =
+        callbackUrl &&
+        callbackUrl.startsWith("/") &&
+        !callbackUrl.startsWith("//");
+
+      if (isSafeCallback) {
+        router.replace(callbackUrl);
+      } else {
+        router.replace("/dashboard");
+      }
+
+      router.refresh();
+    } catch (error) {
+      alert(
+        "Could not connect to the backend.",
+      );
     }
   }
 

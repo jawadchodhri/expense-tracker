@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config";
+import cookieParser from "cookie-parser";
 import dns from "node:dns";
+import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import { connectDatabase } from "./config/database.js";
 
@@ -22,6 +23,8 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
