@@ -3,8 +3,6 @@ const SESSION_KEY = "expense_tracker_session";
 const INCOME_KEY = "expense_tracker_income";
 const EXPENSE_KEY = "expense_tracker_expenses";
 const ACCOUNTS_KEY = "expense_tracker_accounts";
-const AUTH_COOKIE_NAME = "expense_tracker_auth";
-const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 function safeParse(value, fallback) {
   try {
@@ -19,10 +17,7 @@ function getUserStorageKey(baseKey) {
     return null;
   }
 
-  const session = safeParse(
-    localStorage.getItem(SESSION_KEY),
-    null,
-  );
+  const session = safeParse(localStorage.getItem(SESSION_KEY), null);
 
   if (!session || session.id === undefined) {
     return null;
@@ -54,10 +49,7 @@ export function getAccounts() {
     return [];
   }
 
-  return safeParse(
-    localStorage.getItem(userKey),
-    [],
-  );
+  return safeParse(localStorage.getItem(userKey), []);
 }
 
 export function saveAccounts(accounts) {
@@ -71,12 +63,8 @@ export function saveAccounts(accounts) {
     return;
   }
 
-  localStorage.setItem(
-    userKey,
-    JSON.stringify(accounts),
-  );
+  localStorage.setItem(userKey, JSON.stringify(accounts));
 }
-
 
 // SESSION
 export function getSession() {
@@ -89,19 +77,7 @@ export function saveSession(user) {
     return;
   }
 
-  localStorage.setItem(
-    SESSION_KEY,
-    JSON.stringify(user),
-  );
-
-  document.cookie =
-    AUTH_COOKIE_NAME +
-    "=" +
-    encodeURIComponent(String(user.id)) +
-    "; path=/" +
-    "; max-age=" +
-    AUTH_COOKIE_MAX_AGE +
-    "; SameSite=Lax";
+  localStorage.setItem(SESSION_KEY, JSON.stringify(user));
 }
 
 export function clearSession() {
@@ -110,10 +86,6 @@ export function clearSession() {
   }
 
   localStorage.removeItem(SESSION_KEY);
-
-  document.cookie =
-    AUTH_COOKIE_NAME +
-    "=; path=/; max-age=0; SameSite=Lax";
 }
 
 // INCOME
@@ -128,10 +100,7 @@ export function getIncome() {
     return [];
   }
 
-  return safeParse(
-    localStorage.getItem(userKey),
-    [],
-  );
+  return safeParse(localStorage.getItem(userKey), []);
 }
 
 export function saveIncome(income) {
@@ -145,12 +114,8 @@ export function saveIncome(income) {
     return;
   }
 
-  localStorage.setItem(
-    userKey,
-    JSON.stringify(income),
-  );
+  localStorage.setItem(userKey, JSON.stringify(income));
 }
-
 
 // EXPENSES
 export function getExpenses() {
@@ -164,10 +129,7 @@ export function getExpenses() {
     return [];
   }
 
-  return safeParse(
-    localStorage.getItem(userKey),
-    [],
-  );
+  return safeParse(localStorage.getItem(userKey), []);
 }
 
 export function saveExpenses(expenses) {
@@ -181,8 +143,5 @@ export function saveExpenses(expenses) {
     return;
   }
 
-  localStorage.setItem(
-    userKey,
-    JSON.stringify(expenses),
-  );
+  localStorage.setItem(userKey, JSON.stringify(expenses));
 }

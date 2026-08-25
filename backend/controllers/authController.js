@@ -1,6 +1,23 @@
 import bcrypt from "bcryptjs";
 
 import User from "../models/User.js";
+import { generateToken } from "../utils/generateToken.js";
+
+function setAuthCookie(response, userId) {
+  const token = generateToken(userId);
+
+  response.cookie(
+    "expense_tracker_auth",
+    token,
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
+    },
+  );
+}
 
 export async function registerUser(request, response) {
   try {
@@ -42,6 +59,8 @@ export async function registerUser(request, response) {
       password: hashedPassword,
     });
 
+    setAuthCookie(response, newUser._id);
+
     return response.status(201).json({
       message: "User registered successfully.",
       user: {
@@ -60,4 +79,75 @@ export async function registerUser(request, response) {
       message: "Registration failed.",
     });
   }
+}
+
+export async function loginUser(request, response) {
+  try {
+    const { email, password } = request.body;
+
+    if (!email || !password) {
+      return response.status(400).json({
+        message: "Please provide email and password.",
+      });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    const user = await User.findOne({
+      email: cleanEmail,
+    }).select("+password");
+
+    if (!user) {
+      return response.status(401).json({
+        message: "Email or password is incorrect.",
+      });
+    }
+
+    const passwordsMatch = await bcrypt.compare(
+      password,
+      user.password,
+    );
+
+    if (!passwordsMatch) {
+      return response.status(401).json({
+        message: "Email or password is incorrect.",
+      });
+    }
+
+    setAuthCookie(response, user._id);
+
+    return response.status(200).json({
+      message: "Login successful.",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error(
+      "Login failed:",
+      error.message,
+    );
+
+    return response.status(500).json({
+      message: "Login failed.",
+    });
+  }
+}
+
+export function logoutUser(request, response) {
+  response.clearCookie(
+    "expense_tracker_auth",
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    },
+  );
+
+  return response.status(200).json({
+    message: "Logout successful.",
+  });
 }
