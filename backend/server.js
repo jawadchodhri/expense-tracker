@@ -5,6 +5,7 @@ import dns from "node:dns";
 import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import { connectDatabase } from "./config/database.js";
+import accountRoutes from "./routes/accountRoutes.js";
 
 dns.setServers([
   "8.8.8.8",
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/accounts", accountRoutes);
 
 
 app.get("/api/health", function (request, response) {
