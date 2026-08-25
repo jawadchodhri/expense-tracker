@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
-import { getUsers, saveUsers, saveSession } from "@/lib/storage";
+import { saveSession } from "@/lib/storage";
 
 const registerFields = [
   {
@@ -31,30 +31,31 @@ const registerFields = [
     minLength: 6,
     required: true,
   },
-  // {
-  //   name: "PhoneNumer",
-  //   type: "Number",
-  //   placeholder: "PhoneNumber",
-  //   required: false,
-  // }
 ];
 
 export default function RegisterPage() {
   const router = useRouter();
 
-  function handleRegister(formData) {
+  async function handleRegister(formData) {
     const name = formData.name.trim();
     const email = formData.email.trim().toLowerCase();
     const password = formData.password;
     const confirmPassword = formData.confirmPassword;
 
-    if (name === "" || email === "" || password === "" || confirmPassword === "") {
+    if (
+      name === "" ||
+      email === "" ||
+      password === "" ||
+      confirmPassword === ""
+    ) {
       alert("Please fill all fields.");
       return;
     }
 
     if (password.length < 6) {
-      alert("Password must have at least 6 characters.");
+      alert(
+        "Password must have at least 6 characters.",
+      );
       return;
     }
 
@@ -63,30 +64,47 @@ export default function RegisterPage() {
       return;
     }
 
-    const users = getUsers();
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/register",
+        {
+          method: "POST",
 
-    const userAlreadyExists = users.some(function (currentUser) {
-      return currentUser.email.toLowerCase() === email;
-    });
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-    if (userAlreadyExists) {
-      alert("This email is already registered.");
-      return;
+          credentials: "include",
+
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            password: password,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      saveSession(data.user);
+
+      router.replace("/dashboard");
+      router.refresh();
+    } catch (error) {
+      console.error(
+        "Registration error:",
+        error,
+      );
+
+      alert(
+        "Could not connect to the backend.",
+      );
     }
-
-    const newUser = {
-      id: Date.now(),
-      name: name,
-      email: email,
-      password: password,
-    };
-
-    users.push(newUser);
-
-    saveUsers(users);
-    saveSession(newUser);
-
-    router.push("/dashboard");
   }
 
   return (
