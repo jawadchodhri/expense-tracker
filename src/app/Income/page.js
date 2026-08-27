@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import IncomeForm from "@/components/IncomeForm";
-import { saveIncome } from "@/lib/storage";
 import { calculateTotal } from "@/lib/Calculation";
 import TransactionList from "@/components/TransactionList";
 
@@ -88,34 +87,56 @@ export default function IncomePage() {
     }
   }
 
-  function handleUpdateIncome(incomeData) {
-    const updatedIncomeList = [];
+  async function handleUpdateIncome(incomeData) {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/income/" + incomeBeingEdited.id,
+        {
+          method: "PATCH",
 
-    for (let i = 0; i < incomeList.length; i++) {
-      const income = incomeList[i];
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      if (income.id === incomeBeingEdited.id) {
-        const updatedIncome = {
-          id: income.id,
-          title: incomeData.title,
-          amount: incomeData.amount,
-          category: incomeData.category,
-          accountId: incomeData.accountId,
-          date: incomeData.date,
-        };
+          credentials: "include",
 
-        updatedIncomeList.push(updatedIncome);
-      } else {
-        updatedIncomeList.push(income);
+          body: JSON.stringify({
+            title: incomeData.title,
+            amount: incomeData.amount,
+            category: incomeData.category,
+            accountId: incomeData.accountId,
+            date: incomeData.date,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
-    }
 
-    setIncomeList(updatedIncomeList);
-    saveIncome(updatedIncomeList);
-    setIncomeBeingEdited(null);
+      const updatedIncomeList = [];
+
+      for (let i = 0; i < incomeList.length; i++) {
+        const income = incomeList[i];
+
+        if (String(income.id) === String(data.income.id)) {
+          updatedIncomeList.push(data.income);
+        } else {
+          updatedIncomeList.push(income);
+        }
+      }
+
+      setIncomeList(updatedIncomeList);
+      setIncomeBeingEdited(null);
+    } catch (error) {
+      alert("Could not update the income.");
+    }
   }
 
-  function handleDeleteIncome(incomeId) {
+  async function handleDeleteIncome(incomeId) {
     const shouldDelete = window.confirm(
       "Are you sure you want to delete this income?",
     );
@@ -124,18 +145,43 @@ export default function IncomePage() {
       return;
     }
 
-    const updatedIncomeList = [];
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/income/" + incomeId,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
-    for (let i = 0; i < incomeList.length; i++) {
-      const income = incomeList[i];
+      const data = await response.json();
 
-      if (income.id !== incomeId) {
-        updatedIncomeList.push(income);
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
-    }
 
-    setIncomeList(updatedIncomeList);
-    saveIncome(updatedIncomeList);
+      const updatedIncomeList = [];
+
+      for (let i = 0; i < incomeList.length; i++) {
+        const income = incomeList[i];
+
+        if (String(income.id) !== String(data.incomeId)) {
+          updatedIncomeList.push(income);
+        }
+      }
+
+      setIncomeList(updatedIncomeList);
+
+      if (
+        incomeBeingEdited &&
+        String(incomeBeingEdited.id) === String(data.incomeId)
+      ) {
+        setIncomeBeingEdited(null);
+      }
+    } catch (error) {
+      alert("Could not delete the income.");
+    }
   }
 
   return (
