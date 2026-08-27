@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import { saveAccounts, getIncome, getExpenses } from "@/lib/storage";
+import { getIncome, getExpenses } from "@/lib/storage";
 import {
   calculateAccountBalance,
   calculateTotalAccountsBalance,
@@ -89,44 +89,52 @@ export default function AccountsPage() {
     }
   }
 
-  function handleUpdateAccount(accountData) {
-    for (let i = 0; i < accountList.length; i++) {
-      const account = accountList[i];
+  async function handleUpdateAccount(accountData) {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/accounts/" + accountBeingEdited.id,
+        {
+          method: "PATCH",
 
-      const isDifferentAccount = account.id !== accountBeingEdited.id;
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      const hasSameName =
-        account.name.toLowerCase() === accountData.name.toLowerCase();
+          credentials: "include",
 
-      if (isDifferentAccount && hasSameName) {
-        alert("An account with this name already exists.");
+          body: JSON.stringify({
+            name: accountData.name,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
         return;
       }
-    }
 
-    const updatedAccountList = [];
+      const updatedAccountList = [];
 
-    for (let i = 0; i < accountList.length; i++) {
-      const account = accountList[i];
+      for (let i = 0; i < accountList.length; i++) {
+        const account = accountList[i];
 
-      if (account.id === accountBeingEdited.id) {
-        const updatedAccount = {
-          id: account.id,
-          name: accountData.name,
-        };
-
-        updatedAccountList.push(updatedAccount);
-      } else {
-        updatedAccountList.push(account);
+        if (String(account.id) === String(data.account.id)) {
+          updatedAccountList.push(data.account);
+        } else {
+          updatedAccountList.push(account);
+        }
       }
-    }
 
-    setAccountList(updatedAccountList);
-    saveAccounts(updatedAccountList);
-    setAccountBeingEdited(null);
+      setAccountList(updatedAccountList);
+      setAccountBeingEdited(null);
+    } catch (error) {
+      alert("Could not update the account.");
+    }
   }
 
-  function handleDeleteAccount(accountId) {
+  async function handleDeleteAccount(accountId) {
     let accountHasTransactions = false;
 
     for (let i = 0; i < incomeList.length; i++) {
@@ -158,21 +166,42 @@ export default function AccountsPage() {
       return;
     }
 
-    const updatedAccountList = [];
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/accounts/" + accountId,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
-    for (let i = 0; i < accountList.length; i++) {
-      const account = accountList[i];
+      const data = await response.json();
 
-      if (account.id !== accountId) {
-        updatedAccountList.push(account);
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
-    }
 
-    setAccountList(updatedAccountList);
-    saveAccounts(updatedAccountList);
+      const updatedAccountList = [];
 
-    if (accountBeingEdited && accountBeingEdited.id === accountId) {
-      setAccountBeingEdited(null);
+      for (let i = 0; i < accountList.length; i++) {
+        const account = accountList[i];
+
+        if (String(account.id) !== String(data.accountId)) {
+          updatedAccountList.push(account);
+        }
+      }
+
+      setAccountList(updatedAccountList);
+
+      if (
+        accountBeingEdited &&
+        String(accountBeingEdited.id) === String(data.accountId)
+      ) {
+        setAccountBeingEdited(null);
+      }
+    } catch (error) {
+      alert("Could not delete the account.");
     }
   }
 

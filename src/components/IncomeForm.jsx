@@ -68,7 +68,7 @@ export default function IncomeForm({
       return;
     }
 
-    const accountId = Number(selectedAccountId);
+    const accountId = selectedAccountId;
 
     const incomeData = {
       title: title.trim(),
