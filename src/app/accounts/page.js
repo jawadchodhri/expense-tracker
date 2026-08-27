@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import AccountForm from "@/components/AccountForm";
-import { getIncome, getExpenses } from "@/lib/storage";
 import {
   calculateAccountBalance,
   calculateTotalAccountsBalance,
@@ -16,38 +15,56 @@ export default function AccountsPage() {
   const [accountBeingEdited, setAccountBeingEdited] = useState(null);
 
   useEffect(function () {
-    const timer = setTimeout(function () {
-      const savedIncome = getIncome();
-      const savedExpenses = getExpenses();
-
-      setIncomeList(savedIncome);
-      setExpenseList(savedExpenses);
-    }, 0);
-
-    async function loadAccounts() {
+    async function loadAccountPageData() {
       try {
-        const response = await fetch("http://localhost:5000/api/accounts", {
+        const accountsResponse = await fetch(
+          "http://localhost:5000/api/accounts",
+          {
+            credentials: "include",
+          },
+        );
+
+        const incomeResponse = await fetch("http://localhost:5000/api/income", {
           credentials: "include",
         });
 
-        const data = await response.json();
+        const expensesResponse = await fetch(
+          "http://localhost:5000/api/expenses",
+          {
+            credentials: "include",
+          },
+        );
 
-        if (!response.ok) {
-          alert(data.message);
+        const accountsData = await accountsResponse.json();
+
+        const incomeData = await incomeResponse.json();
+
+        const expensesData = await expensesResponse.json();
+
+        if (!accountsResponse.ok) {
+          alert(accountsData.message);
           return;
         }
 
-        setAccountList(data.accounts);
+        if (!incomeResponse.ok) {
+          alert(incomeData.message);
+          return;
+        }
+
+        if (!expensesResponse.ok) {
+          alert(expensesData.message);
+          return;
+        }
+
+        setAccountList(accountsData.accounts);
+        setIncomeList(incomeData.income);
+        setExpenseList(expensesData.expenses);
       } catch (error) {
-        alert("Could not load accounts from the backend.");
+        alert("Could not load account balances.");
       }
     }
 
-    loadAccounts();
-
-    return function () {
-      clearTimeout(timer);
-    };
+    loadAccountPageData();
   }, []);
 
   const totalBalance = calculateTotalAccountsBalance(

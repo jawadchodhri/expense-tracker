@@ -51,7 +51,7 @@ const [selectedAccountId, setSelectedAccountId] =
       return;
     }
 
-    const accountId = Number(selectedAccountId);
+    const accountId = selectedAccountId
 
     if (title.trim() === "" || amount === "" || category.trim() === "" || date === "") {
       alert("Please fill all the fields.");

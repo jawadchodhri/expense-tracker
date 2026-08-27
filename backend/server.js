@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js";
 import { connectDatabase } from "./config/database.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import incomeRoutes from "./routes/incomeRoutes.js";
+import expenseRoutes from "./routes/expenseRoutes.js";
 
 dns.setServers([
   "8.8.8.8",
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);
 app.use("/api/income", incomeRoutes);
+app.use("/api/expenses", expenseRoutes);
 
 
 app.get("/api/health", function (request, response) {

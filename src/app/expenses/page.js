@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import ExpenseForm from "@/components/ExpenseForm";
 import TransactionList from "@/components/TransactionList";
-import { getExpenses, saveExpenses, getAccounts, getIncome } from "@/lib/storage";
+import { saveExpenses } from "@/lib/storage";
 import { calculateTotal, calculateAccountBalance } from "@/lib/Calculation";
 
 export default function ExpensePage() {
@@ -16,16 +16,60 @@ export default function ExpensePage() {
   const totalExpenses = calculateTotal(expenseList);
 
   useEffect(function () {
-      const savedExpenses = getExpenses();
-      const savedAccounts = getAccounts();
-      const savedIncome = getIncome();
+    async function loadPageData() {
+      try {
+        const expensesResponse = await fetch(
+          "http://localhost:5000/api/expenses",
+          {
+            credentials: "include",
+          },
+        );
 
-      setExpenseList(savedExpenses);
-      setAccountList(savedAccounts);
-      setIncomeList(savedIncome);
+        const incomeResponse = await fetch("http://localhost:5000/api/income", {
+          credentials: "include",
+        });
+
+        const accountsResponse = await fetch(
+          "http://localhost:5000/api/accounts",
+          {
+            credentials: "include",
+          },
+        );
+
+        const expensesData = await expensesResponse.json();
+
+        const incomeData = await incomeResponse.json();
+
+        const accountsData = await accountsResponse.json();
+
+        if (!expensesResponse.ok) {
+          alert(expensesData.message);
+          return;
+        }
+
+        if (!incomeResponse.ok) {
+          alert(incomeData.message);
+          return;
+        }
+
+        if (!accountsResponse.ok) {
+          alert(accountsData.message);
+          return;
+        }
+
+        setExpenseList(expensesData.expenses);
+
+        setIncomeList(incomeData.income);
+        setAccountList(accountsData.accounts);
+      } catch (error) {
+        alert("Could not load expenses, income, and accounts.");
+      }
+    }
+
+    loadPageData();
   }, []);
 
-  function handleAddExpense(expenseData) {
+  async function handleAddExpense(expenseData) {
     const accountBalance = calculateAccountBalance(
       expenseData.accountId,
       incomeList,
@@ -37,30 +81,51 @@ export default function ExpensePage() {
       return;
     }
 
-    const newExpense = {
-      id: Date.now(),
-      title: expenseData.title,
-      amount: expenseData.amount,
-      category: expenseData.category,
-      accountId: expenseData.accountId,
-      date: expenseData.date,
-    };
+    try {
+      const response = await fetch("http://localhost:5000/api/expenses", {
+        method: "POST",
 
-    const updatedExpenseList = expenseList.slice();
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    updatedExpenseList.push(newExpense);
-    setExpenseList(updatedExpenseList);
-    saveExpenses(updatedExpenseList);
+        credentials: "include",
+
+        body: JSON.stringify({
+          title: expenseData.title,
+          amount: expenseData.amount,
+          category: expenseData.category,
+          accountId: expenseData.accountId,
+          date: expenseData.date,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      const updatedExpenseList = expenseList.slice();
+
+      updatedExpenseList.unshift(data.expense);
+
+      setExpenseList(updatedExpenseList);
+    } catch (error) {
+      alert("Could not create the expense.");
+    }
   }
 
-  function handleUpdateExpense(expenseData) {
+  async function handleUpdateExpense(expenseData) {
     let availableBalance = calculateAccountBalance(
       expenseData.accountId,
       incomeList,
       expenseList,
     );
 
-    const isSameAccount = String(expenseBeingEdited.accountId) === String(expenseData.accountId);
+    const isSameAccount =
+      String(expenseBeingEdited.accountId) === String(expenseData.accountId);
 
     if (isSameAccount) {
       availableBalance = availableBalance + Number(expenseBeingEdited.amount);
@@ -70,52 +135,101 @@ export default function ExpensePage() {
       alert("This account does not have enough balance.");
       return;
     }
-    const updatedExpenseList = [];
 
-    for (let i = 0; i < expenseList.length; i++) {
-      const expense = expenseList[i];
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/expenses/" + expenseBeingEdited.id,
+        {
+          method: "PATCH",
 
-      if (expense.id === expenseBeingEdited.id) {
-        const updatedExpense = {
-          id: expense.id,
-          title: expenseData.title,
-          amount: expenseData.amount,
-          category: expenseData.category,
-          accountId: expenseData.accountId,
-          date: expenseData.date,
-        };
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        updatedExpenseList.push(updatedExpense);
-      } else {
-        updatedExpenseList.push(expense);
+          credentials: "include",
+
+          body: JSON.stringify({
+            title: expenseData.title,
+            amount: expenseData.amount,
+            category: expenseData.category,
+            accountId: expenseData.accountId,
+            date: expenseData.date,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
-    }
 
-    setExpenseList(updatedExpenseList);
-    saveExpenses(updatedExpenseList);
-    setExpenseBeingEdited(null);
+      const updatedExpenseList = [];
+
+      for (let i = 0; i < expenseList.length; i++) {
+        const expense = expenseList[i];
+
+        if (String(expense.id) === String(data.expense.id)) {
+          updatedExpenseList.push(data.expense);
+        } else {
+          updatedExpenseList.push(expense);
+        }
+      }
+
+      setExpenseList(updatedExpenseList);
+      setExpenseBeingEdited(null);
+    } catch (error) {
+      alert("Could not update the expense.");
+    }
   }
 
-  function handleDeleteExpense(expenseId) {
+  async function handleDeleteExpense(expenseId) {
     const shouldDelete = window.confirm(
-      "Are you sure you want to delete this expense",
+      "Are you sure you want to delete this expense?",
     );
 
     if (!shouldDelete) {
       return;
     }
 
-    const updatedExpenseList = [];
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/expenses/" + expenseId,
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
 
-    for (let i = 0; i < expenseList.length; i++) {
-      const expense = expenseList[i];
+      const data = await response.json();
 
-      if (expense.id !== expenseId) {
-        updatedExpenseList.push(expense);
+      if (!response.ok) {
+        alert(data.message);
+        return;
       }
+
+      const updatedExpenseList = [];
+
+      for (let i = 0; i < expenseList.length; i++) {
+        const expense = expenseList[i];
+
+        if (String(expense.id) !== String(data.expenseId)) {
+          updatedExpenseList.push(expense);
+        }
+      }
+
+      setExpenseList(updatedExpenseList);
+
+      if (
+        expenseBeingEdited &&
+        String(expenseBeingEdited.id) === String(data.expenseId)
+      ) {
+        setExpenseBeingEdited(null);
+      }
+    } catch (error) {
+      alert("Could not delete the expense.");
     }
-    setExpenseList(updatedExpenseList);
-    saveExpenses(updatedExpenseList);
   }
 
   return (
@@ -126,7 +240,9 @@ export default function ExpensePage() {
         <div className="w-full lg:w-96 lg:shrink-0">
           <ExpenseForm
             key={expenseBeingEdited ? expenseBeingEdited.id : "new-expense"}
-            onSubmit={expenseBeingEdited ? handleUpdateExpense : handleAddExpense}
+            onSubmit={
+              expenseBeingEdited ? handleUpdateExpense : handleAddExpense
+            }
             expenseBeingEdited={expenseBeingEdited}
             accounts={accountList}
             onCancelEdit={function () {

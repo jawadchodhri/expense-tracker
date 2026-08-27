@@ -50,6 +50,26 @@ export default function IncomePage() {
     loadPageData();
   }, []);
 
+  async function reloadIncomeList() {
+    try {
+      const response = await fetch("http://localhost:5000/api/income", {
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return false;
+      }
+
+      setIncomeList(data.income);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async function handleAddIncome(incomeData) {
     try {
       const response = await fetch("http://localhost:5000/api/income", {
@@ -83,6 +103,15 @@ export default function IncomePage() {
 
       setIncomeList(updatedIncomeList);
     } catch (error) {
+      const listWasReloaded = await reloadIncomeList();
+
+      if (listWasReloaded) {
+        alert(
+          "The connection was interrupted. The latest income list has been reloaded. Check the list before adding it again.",
+        );
+        return;
+      }
+
       alert("Could not create the income.");
     }
   }
