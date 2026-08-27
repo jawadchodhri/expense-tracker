@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import IncomeForm from "@/components/IncomeForm";
-import { getIncome, saveIncome, getAccounts } from "@/lib/storage";
+import { saveIncome } from "@/lib/storage";
 import { calculateTotal } from "@/lib/Calculation";
 import TransactionList from "@/components/TransactionList";
 
@@ -14,29 +14,78 @@ export default function IncomePage() {
   const totalIncome = calculateTotal(incomeList);
 
   useEffect(function () {
-      const savedIncome = getIncome();
-      const savedAccounts = getAccounts();
+    async function loadPageData() {
+      try {
+        const incomeResponse = await fetch("http://localhost:5000/api/income", {
+          credentials: "include",
+        });
 
-      setIncomeList(savedIncome);
-      setAccountList(savedAccounts);
+        const accountsResponse = await fetch(
+          "http://localhost:5000/api/accounts",
+          {
+            credentials: "include",
+          },
+        );
+
+        const incomeData = await incomeResponse.json();
+
+        const accountsData = await accountsResponse.json();
+
+        if (!incomeResponse.ok) {
+          alert(incomeData.message);
+          return;
+        }
+
+        if (!accountsResponse.ok) {
+          alert(accountsData.message);
+          return;
+        }
+
+        setIncomeList(incomeData.income);
+        setAccountList(accountsData.accounts);
+      } catch (error) {
+        alert("Could not load income and accounts.");
+      }
+    }
+
+    loadPageData();
   }, []);
 
-  function handleAddIncome(incomeData) {
-    const newIncome = {
-      id: Date.now(),
-      title: incomeData.title,
-      amount: incomeData.amount,
-      category: incomeData.category,
-      accountId: incomeData.accountId,
-      date: incomeData.date,
-    };
+  async function handleAddIncome(incomeData) {
+    try {
+      const response = await fetch("http://localhost:5000/api/income", {
+        method: "POST",
 
-    const updatedIncomeList = incomeList.slice();
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-    updatedIncomeList.push(newIncome);
+        credentials: "include",
 
-    setIncomeList(updatedIncomeList);
-    saveIncome(updatedIncomeList);
+        body: JSON.stringify({
+          title: incomeData.title,
+          amount: incomeData.amount,
+          category: incomeData.category,
+          accountId: incomeData.accountId,
+          date: incomeData.date,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
+
+      const updatedIncomeList = incomeList.slice();
+
+      updatedIncomeList.unshift(data.income);
+
+      setIncomeList(updatedIncomeList);
+    } catch (error) {
+      alert("Could not create the income.");
+    }
   }
 
   function handleUpdateIncome(incomeData) {
