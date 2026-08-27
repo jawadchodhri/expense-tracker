@@ -1,4 +1,5 @@
 import Account from "../models/Account.js";
+import mongoose from "mongoose";
 
 function formatAccount(account) {
   return {
@@ -90,6 +91,123 @@ export async function createAccount(request, response) {
 
     return response.status(500).json({
       message: "Could not create account.",
+    });
+  }
+}
+
+export async function updateAccount(
+  request,
+  response,
+) {
+  try {
+    const { accountId } = request.params;
+    const { name } = request.body;
+
+    if (!mongoose.isValidObjectId(accountId)) {
+      return response.status(400).json({
+        message: "Invalid account ID.",
+      });
+    }
+
+    if (
+      typeof name !== "string" ||
+      name.trim() === ""
+    ) {
+      return response.status(400).json({
+        message:
+          "Please provide an account name.",
+      });
+    }
+
+    const cleanName = name.trim();
+
+    const account = await Account.findOne({
+      _id: accountId,
+      userId: request.user._id,
+    });
+
+    if (!account) {
+      return response.status(404).json({
+        message: "Account not found.",
+      });
+    }
+
+    const existingAccount =
+      await Account.findOne({
+        _id: {
+          $ne: accountId,
+        },
+        userId: request.user._id,
+        name: cleanName,
+      }).collation({
+        locale: "en",
+        strength: 2,
+      });
+
+    if (existingAccount) {
+      return response.status(409).json({
+        message:
+          "An account with this name already exists.",
+      });
+    }
+
+    account.name = cleanName;
+
+    await account.save();
+
+    return response.status(200).json({
+      message: "Account updated successfully.",
+      account: formatAccount(account),
+    });
+  } catch (error) {
+    console.error(
+      "Updating account failed:",
+      error.message,
+    );
+
+    return response.status(500).json({
+      message: "Could not update account.",
+    });
+  }
+}
+
+export async function deleteAccount(
+  request,
+  response,
+) {
+  try {
+    const { accountId } = request.params;
+
+    if (!mongoose.isValidObjectId(accountId)) {
+      return response.status(400).json({
+        message: "Invalid account ID.",
+      });
+    }
+
+    const deletedAccount =
+      await Account.findOneAndDelete({
+        _id: accountId,
+        userId: request.user._id,
+      });
+
+    if (!deletedAccount) {
+      return response.status(404).json({
+        message: "Account not found.",
+      });
+    }
+
+    return response.status(200).json({
+      message: "Account deleted successfully.",
+      accountId: deletedAccount._id,
+    });
+  } catch (error) {
+    console.error(
+      "Deleting account failed:",
+      error.message,
+    );
+
+    return response.status(500).json({
+      message: "Could not delete account.",
     });
   }
 }
