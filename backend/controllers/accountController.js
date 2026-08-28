@@ -187,21 +187,41 @@ export async function deleteAccount(
       });
     }
 
-    const deletedAccount =
-      await Account.findOneAndDelete({
-        _id: accountId,
-        userId: request.user._id,
-      });
+    const account = await Account.findOne({
+      _id: accountId,
+      userId: request.user._id,
+    });
 
-    if (!deletedAccount) {
+    if (!account) {
       return response.status(404).json({
         message: "Account not found.",
       });
     }
 
+    const incomeExists = await Income.exists({
+      accountId: account._id,
+      userId: request.user._id,
+    });
+
+    const expenseExists =
+      await Expense.exists({
+        accountId: account._id,
+        userId: request.user._id,
+      });
+
+    if (incomeExists || expenseExists) {
+      return response.status(409).json({
+        message:
+          "This account cannot be deleted because it has transactions.",
+      });
+    }
+
+    await account.deleteOne();
+
     return response.status(200).json({
-      message: "Account deleted successfully.",
-      accountId: deletedAccount._id,
+      message:
+        "Account deleted successfully.",
+      accountId: account._id,
     });
   } catch (error) {
     console.error(
