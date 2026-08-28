@@ -1,44 +1,96 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import StatCard from "@/components/StatCard";
-import { getSession, getIncome, getExpenses, getAccounts } from "@/lib/storage";
 import { calculateTotal, calculateBalance } from "@/lib/Calculation";
 import RecentTransactions from "@/components/RecentTransactions";
 import Charts from "@/components/Charts";
 import CategoryCharts from "@/components/CategoryCharts";
 
 export default function DashboardPage() {
-  const router = useRouter();
 
   const [incomeList, setIncomeList] = useState([]);
   const [expenseList, setExpenseList] = useState([]);
   const [accountList, setAccountList] = useState([]);
   const [userName, setUserName] = useState("");
 
-  useEffect(
-    function () {
-      const session = getSession();
+  useEffect(function () {
+  async function loadDashboardData() {
+    try {
+      const userResponse = await fetch(
+        "http://localhost:5000/api/auth/me",
+        {
+          credentials: "include",
+        },
+      );
 
-      if (!session) {
-        router.push("/login");
+      const incomeResponse = await fetch(
+        "http://localhost:5000/api/income",
+        {
+          credentials: "include",
+        },
+      );
+
+      const expensesResponse = await fetch(
+        "http://localhost:5000/api/expenses",
+        {
+          credentials: "include",
+        },
+      );
+
+      const accountsResponse = await fetch(
+        "http://localhost:5000/api/accounts",
+        {
+          credentials: "include",
+        },
+      );
+
+      const userData =
+        await userResponse.json();
+
+      const incomeData =
+        await incomeResponse.json();
+
+      const expensesData =
+        await expensesResponse.json();
+
+      const accountsData =
+        await accountsResponse.json();
+
+      if (!userResponse.ok) {
+        alert(userData.message);
         return;
       }
 
-      setUserName(session.name);
+      if (!incomeResponse.ok) {
+        alert(incomeData.message);
+        return;
+      }
 
-      const savedIncome = getIncome();
-      const savedExpenses = getExpenses();
-      const savedAccounts = getAccounts();
+      if (!expensesResponse.ok) {
+        alert(expensesData.message);
+        return;
+      }
 
-      setIncomeList(savedIncome);
-      setExpenseList(savedExpenses);
-      setAccountList(savedAccounts);
-    },
-    [router],
-  );
+      if (!accountsResponse.ok) {
+        alert(accountsData.message);
+        return;
+      }
+
+      setUserName(userData.user.name);
+      setIncomeList(incomeData.income);
+      setExpenseList(expensesData.expenses);
+      setAccountList(accountsData.accounts);
+    } catch (error) {
+      alert(
+        "Could not load the dashboard.",
+      );
+    }
+  }
+
+  loadDashboardData();
+}, []);
 
   const totalIncome = calculateTotal(incomeList);
   const totalExpenses = calculateTotal(expenseList);
