@@ -42,11 +42,7 @@ export default function TransactionList({
   }
 
   function getAccountName(accountId) {
-    for (
-      let i = 0;
-      i < accounts.length;
-      i++
-    ) {
+    for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i];
 
       if (
@@ -62,11 +58,7 @@ export default function TransactionList({
 
   const categoryList = [];
 
-  for (
-    let i = 0;
-    i < transactions.length;
-    i++
-  ) {
+  for (let i = 0; i < transactions.length; i++) {
     const category =
       transactions[i].category;
 
@@ -84,11 +76,7 @@ export default function TransactionList({
   const cleanSearch =
     searchText.trim().toLowerCase();
 
-  for (
-    let i = 0;
-    i < transactions.length;
-    i++
-  ) {
+  for (let i = 0; i < transactions.length; i++) {
     const transaction = transactions[i];
 
     const accountName = getAccountName(
