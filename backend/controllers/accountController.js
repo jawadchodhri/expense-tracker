@@ -1,5 +1,8 @@
-import Account from "../models/Account.js";
 import mongoose from "mongoose";
+
+import Account from "../models/Account.js";
+import Income from "../models/Income.js";
+import Expense from "../models/Expense.js";
 
 function formatAccount(account) {
   return {
