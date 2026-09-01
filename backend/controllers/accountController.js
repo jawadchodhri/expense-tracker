@@ -22,9 +22,7 @@ export async function getAccounts(request, response) {
     const formattedAccounts = [];
 
     for (let i = 0; i < accounts.length; i++) {
-      formattedAccounts.push(
-        formatAccount(accounts[i]),
-      );
+      formattedAccounts.push(formatAccount(accounts[i]));
     }
 
     return response.status(200).json({
