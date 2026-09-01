@@ -44,10 +44,7 @@ export async function createAccount(request, response) {
   try {
     const { name } = request.body;
 
-    if (
-      typeof name !== "string" ||
-      name.trim() === ""
-    ) {
+    if (typeof name !== "string" || name.trim() === "") {
       return response.status(400).json({
         message:
           "Please provide an account name.",
