@@ -11,10 +11,7 @@ function formatAccount(account) {
   };
 }
 
-export async function getAccounts(
-  request,
-  response,
-) {
+export async function getAccounts(request, response) {
   try {
     const accounts = await Account.find({
       userId: request.user._id,
