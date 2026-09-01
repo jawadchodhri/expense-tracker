@@ -43,9 +43,7 @@ async function startServer() {
   await connectDatabase();
 
   app.listen(port, function () {
-    console.log(
-      `Backend is running at http://localhost:${port}`,
-    );
+    console.log(`Backend is running at http://localhost:${port}`);
   });
 }
 
