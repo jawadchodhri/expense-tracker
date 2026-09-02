@@ -216,10 +216,7 @@ export async function deleteAccount(
       accountId: account._id,
     });
   } catch (error) {
-    console.error(
-      "Deleting account failed:",
-      error.message,
-    );
+    console.error("Deleting account failed:", error.message);
 
     return response.status(500).json({
       message: "Could not delete account.",
