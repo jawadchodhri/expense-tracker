@@ -18,18 +18,18 @@ export default function AccountsPage() {
     async function loadAccountPageData() {
       try {
         const accountsResponse = await fetch(
-          "http://localhost:5000/api/accounts",
+          "api/accounts",
           {
             credentials: "include",
           },
         );
 
-        const incomeResponse = await fetch("http://localhost:5000/api/income", {
+        const incomeResponse = await fetch("/api/income", {
           credentials: "include",
         });
 
         const expensesResponse = await fetch(
-          "http://localhost:5000/api/expenses",
+          "/api/expenses",
           {
             credentials: "include",
           },
@@ -75,7 +75,7 @@ export default function AccountsPage() {
 
   async function handleAddAccount(accountData) {
     try {
-      const response = await fetch("http://localhost:5000/api/accounts", {
+      const response = await fetch("/api/accounts", {
         method: "POST",
 
         headers: {
@@ -109,7 +109,7 @@ export default function AccountsPage() {
   async function handleUpdateAccount(accountData) {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/accounts/" + accountBeingEdited.id,
+        "/api/accounts/" + accountBeingEdited.id,
         {
           method: "PATCH",
 
