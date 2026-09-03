@@ -19,28 +19,28 @@ export default function DashboardPage() {
   async function loadDashboardData() {
     try {
       const userResponse = await fetch(
-        "http://localhost:5000/api/auth/me",
+        "/api/auth/me",
         {
           credentials: "include",
         },
       );
 
       const incomeResponse = await fetch(
-        "http://localhost:5000/api/income",
+        "/api/income",
         {
           credentials: "include",
         },
       );
 
       const expensesResponse = await fetch(
-        "http://localhost:5000/api/expenses",
+        "/api/expenses",
         {
           credentials: "include",
         },
       );
 
       const accountsResponse = await fetch(
-        "http://localhost:5000/api/accounts",
+        "/api/accounts",
         {
           credentials: "include",
         },

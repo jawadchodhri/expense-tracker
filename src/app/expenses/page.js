@@ -18,18 +18,18 @@ export default function ExpensePage() {
     async function loadPageData() {
       try {
         const expensesResponse = await fetch(
-          "http://localhost:5000/api/expenses",
+          "/api/expenses",
           {
             credentials: "include",
           },
         );
 
-        const incomeResponse = await fetch("http://localhost:5000/api/income", {
+        const incomeResponse = await fetch("/api/income", {
           credentials: "include",
         });
 
         const accountsResponse = await fetch(
-          "http://localhost:5000/api/accounts",
+          "/api/accounts",
           {
             credentials: "include",
           },
@@ -81,7 +81,7 @@ export default function ExpensePage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/expenses", {
+      const response = await fetch("/api/expenses", {
         method: "POST",
 
         headers: {
@@ -137,7 +137,7 @@ export default function ExpensePage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/expenses/" + expenseBeingEdited.id,
+        "/api/expenses/" + expenseBeingEdited.id,
         {
           method: "PATCH",
 
@@ -194,7 +194,7 @@ export default function ExpensePage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/expenses/" + expenseId,
+        "/api/expenses/" + expenseId,
         {
           method: "DELETE",
           credentials: "include",

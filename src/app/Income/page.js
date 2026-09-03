@@ -15,12 +15,12 @@ export default function IncomePage() {
   useEffect(function () {
     async function loadPageData() {
       try {
-        const incomeResponse = await fetch("http://localhost:5000/api/income", {
+        const incomeResponse = await fetch("/api/income", {
           credentials: "include",
         });
 
         const accountsResponse = await fetch(
-          "http://localhost:5000/api/accounts",
+          "/api/accounts",
           {
             credentials: "include",
           },
@@ -52,7 +52,7 @@ export default function IncomePage() {
 
   async function reloadIncomeList() {
     try {
-      const response = await fetch("http://localhost:5000/api/income", {
+      const response = await fetch("/api/income", {
         credentials: "include",
       });
 
@@ -72,7 +72,7 @@ export default function IncomePage() {
 
   async function handleAddIncome(incomeData) {
     try {
-      const response = await fetch("http://localhost:5000/api/income", {
+      const response = await fetch("/api/income", {
         method: "POST",
 
         headers: {
@@ -119,7 +119,7 @@ export default function IncomePage() {
   async function handleUpdateIncome(incomeData) {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/income/" + incomeBeingEdited.id,
+        "/api/income/" + incomeBeingEdited.id,
         {
           method: "PATCH",
 
@@ -176,7 +176,7 @@ export default function IncomePage() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/income/" + incomeId,
+        "/api/income/" + incomeId,
         {
           method: "DELETE",
           credentials: "include",
