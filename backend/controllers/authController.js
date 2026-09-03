@@ -70,10 +70,7 @@ export async function registerUser(request, response) {
       },
     });
   } catch (error) {
-    console.error(
-      "Registration failed:",
-      error.message,
-    );
+    console.error("Registration failed:", error.message);
 
     return response.status(500).json({
       message: "Registration failed.",
