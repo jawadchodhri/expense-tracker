@@ -18,7 +18,7 @@ export default function AccountsPage() {
     async function loadAccountPageData() {
       try {
         const accountsResponse = await fetch(
-          "api/accounts",
+          "/api/accounts",
           {
             credentials: "include",
           },
