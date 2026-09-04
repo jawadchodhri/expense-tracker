@@ -10,7 +10,7 @@ const nextConfig = {
         // When running on Vercel, it forwards to your live Render backend!
         destination:
           process.env.NODE_ENV === "production"
-            ? "https://expense-tracker-backend-9yqm.onrender.com"
+            ? "https://expense-tracker-backend-9yqm.onrender.com/api/:path*"
             : "http://localhost:5000/api/:path*",
       },
     ];
